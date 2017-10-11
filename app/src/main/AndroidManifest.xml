@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,10 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.NoticeListActivity" />
-        <activity android:name=".activity.LawListActivity" />
-        <activity android:name=".activity.QuestionActivity" />
-        <activity android:name=".activity.ReportDetailActivity" />
+        <activity android:name=".activity.activity.NoticeListActivity" />
+        <activity android:name=".activity.activity.LawListActivity" />
+        <activity android:name=".activity.activity.QuestionActivity" />
+        <activity android:name=".activity.activity.ReportDetailActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.kakyunglee.smokingproject.activity;
+package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

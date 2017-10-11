@@ -1,4 +1,4 @@
-package com.example.kakyunglee.smokingproject.activity;
+package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
