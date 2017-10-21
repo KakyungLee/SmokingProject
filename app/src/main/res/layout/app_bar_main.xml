@@ -12,8 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+        <EditText
+            android:id="@+id/et_search_Loc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/mainactivity_et_search_loc"/>
 
+    </android.support.v7.widget.Toolbar>
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
