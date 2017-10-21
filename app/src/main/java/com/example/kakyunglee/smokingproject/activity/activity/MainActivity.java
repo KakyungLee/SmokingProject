@@ -1,5 +1,6 @@
 package com.example.kakyunglee.smokingproject.activity.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,16 +20,28 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.kakyunglee.smokingproject.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements OnMapReadyCallback {
+    DrawerLayout drawer;.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        MapFragment mapFragment = (MapFragment)fragmentManager
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,14 +55,39 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+            @SuppressWarnings("StatementWithEmptyBody")
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem){
+                // Handle navigation view item clicks here.
+                int id = menuItem.getItemId();
+
+                if (id == R.id.nav_notice) {
+                    Intent intent = new Intent(MainActivity.this,NoticeListActivity.class);
+                    startActivity(intent);
+
+                } else if (id == R.id.nav_law) {
+                    Intent intent = new Intent(MainActivity.this,LawListActivity.class);
+                    startActivity(intent);
+
+                } else if (id == R.id.nav_question) {
+                    Intent intent = new Intent(MainActivity.this,QuestionActivity.class);
+                    startActivity(intent);
+
+                }
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         Button reportBtn = (Button)findViewById(R.id.report);
         reportBtn.setOnClickListener(new View.OnClickListener(){
@@ -146,28 +184,18 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng SEOUL = new LatLng(37.56, 126.97);
 
-        if (id == R.id.nav_notice) {
-            Intent intent = new Intent(MainActivity.this,NoticeListActivity.class);
-            startActivity(intent);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(SEOUL);
+        markerOptions.title("서울");
+        markerOptions.snippet("한국의 수도");
+        googleMap.addMarker(markerOptions);
 
-        } else if (id == R.id.nav_law) {
-            Intent intent = new Intent(MainActivity.this,LawListActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_question) {
-            Intent intent = new Intent(MainActivity.this,QuestionActivity.class);
-            startActivity(intent);
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
+
 }
