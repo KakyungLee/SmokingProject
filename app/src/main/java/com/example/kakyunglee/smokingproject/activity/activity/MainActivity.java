@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback {
     DrawerLayout drawer;
     //위치정보 제공자
-    final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    UserLoc userLoc;
+    //final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    //UserLoc userLoc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng intLocation= new LatLng(37.566678, 126.978407);
-        int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        /*int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
             //default 서울시청 위치
@@ -258,12 +258,12 @@ public class MainActivity extends AppCompatActivity
             }
 
 
-        }
+        }*/
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(intLocation);
-        markerOptions.title("서울");
-        markerOptions.snippet("한국의 수도");
+        markerOptions.title("서울시청");
+        markerOptions.snippet("서울특별시 시청 건물");
         googleMap.addMarker(markerOptions);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(intLocation));
