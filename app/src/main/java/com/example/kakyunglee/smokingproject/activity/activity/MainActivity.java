@@ -1,7 +1,6 @@
 package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentManager fragmentManager = getFragmentManager();
+       FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment)fragmentManager
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -196,6 +195,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng intLocation= new LatLng(37.566678, 126.978407);
@@ -269,6 +269,5 @@ public class MainActivity extends AppCompatActivity
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(intLocation));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
-
 
 }

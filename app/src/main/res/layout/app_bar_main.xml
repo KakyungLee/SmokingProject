@@ -20,6 +20,7 @@
             android:hint="@string/mainactivity_et_search_loc"/>
 
     </android.support.v7.widget.Toolbar>
+
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -59,9 +60,12 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="  address"
+        android:textColor="@color/white"
+        android:background="@color/app_title"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp"
         android:layout_above="@+id/report"
-        android:layout_margin="-10dp"
-        android:background="@color/black"/>
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/report"
@@ -70,6 +74,7 @@
         android:text="신고하기"
         android:layout_alignParentBottom="true"
         android:layout_margin="-200dp"
-        android:background="@color/mainColor"/>
+        android:background="@color/mainColor"
+        android:textColor="@color/white"/>
 
 </RelativeLayout>

@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/nav_notice"
-        android:icon="@drawable/ic_menu_camera"
+        android:icon="@drawable/ic_menu_gallery"
         android:title="공지사항" />
 
     <item
@@ -14,5 +14,10 @@
         android:id="@+id/nav_question"
         android:icon="@drawable/ic_menu_send"
         android:title="일반문의" />
+
+    <item
+        android:id="@+id/app_info"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="앱정보"/>
 
 </menu>
