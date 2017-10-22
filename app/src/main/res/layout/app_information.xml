@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_title">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_menu_gallery"
+        android:layout_marginTop="50dp"
+        android:tint="@color/white"/>
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/app_icon"/>
+
+    <TextView
+        android:id="@+id/app_developer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_info_developer"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/app_name"/>
+
+    <TextView
+        android:id="@+id/app_api"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_info_use_API"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/app_developer"/>
+
+    <TextView
+        android:id="@+id/app_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_info_version"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/app_api"/>
+
+    <Button
+        android:id="@+id/mail_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_title"
+        android:textColor="@color/mainColor"
+        android:text="@string/app_info_button"
+        android:textSize="30dp"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
