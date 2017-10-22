@@ -9,13 +9,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HungryDuckRetrofit {
     private static HungryDuckRetrofit instance = new HungryDuckRetrofit();
     private Retrofit retrofit;
-
+    final String serverURI = "http://172.30.1.20:8080/SmokingServer";
     private HungryDuckRetrofit(){
         buildRetrofit();
     }
     private void buildRetrofit(){
         retrofit = new Retrofit.Builder()
-                .baseUrl("서버 baseUrl")
+                .baseUrl(serverURI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
