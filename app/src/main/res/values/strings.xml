@@ -21,6 +21,7 @@
     <string name="app_info_name">앱 이름:여기선피지마</string>
     <string name="app_info_developer">개발:배고픈 오리</string>
     <string name="app_info_use_API">서울시 제공 금연,흡연정보</string>
-    <string name="app_info_version">1.0</string>
+    <string name="app_info_version">version 1.0</string>
+    <string name="app_info_button">앱 문의메일 보내기</string>
 
 </resources>

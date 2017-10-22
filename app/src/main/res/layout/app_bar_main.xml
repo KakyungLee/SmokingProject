@@ -59,13 +59,14 @@
         android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="  address"
+        android:text="   서울특별시 동대문구 답십리 1동 323-18호"
         android:textColor="@color/white"
         android:background="@color/app_title"
         android:layout_marginLeft="-10dp"
         android:layout_marginRight="-10dp"
         android:layout_above="@+id/report"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"/>
 
     <Button
         android:id="@+id/report"

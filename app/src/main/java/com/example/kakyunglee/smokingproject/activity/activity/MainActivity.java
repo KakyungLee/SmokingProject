@@ -1,25 +1,17 @@
 package com.example.kakyunglee.smokingproject.activity.activity;
 
-import android.Manifest;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +20,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.kakyunglee.smokingproject.R;
-import com.example.kakyunglee.smokingproject.activity.dto.UserLoc;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -91,7 +82,9 @@ public class MainActivity extends AppCompatActivity
                 } else if (id == R.id.nav_question) {
                     Intent intent = new Intent(MainActivity.this,QuestionActivity.class);
                     startActivity(intent);
-
+                } else if(id == R.id.nav_info){
+                    Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
+                    startActivity(intent);
                 }
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
