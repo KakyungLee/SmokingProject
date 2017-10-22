@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HungryDuckRetrofit {
     private static HungryDuckRetrofit instance = new HungryDuckRetrofit();
     private Retrofit retrofit;
-    final String serverURI = "서버 uri";
+    final String serverURI = "http://172.30.1.20:8080/SmokingServer";
     private HungryDuckRetrofit(){
         buildRetrofit();
     }

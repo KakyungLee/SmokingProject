@@ -42,9 +42,11 @@ import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback {
     DrawerLayout drawer;
+
+    // 움직이는 마커
+    MarkerOptions markerOptions = new MarkerOptions();
     //위치정보 제공자
-    //final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    //UserLoc userLoc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,14 +199,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        LatLng intLocation= new LatLng(37.566678, 126.978407);
-        /*int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+    public void onMapReady(final GoogleMap googleMap) {
+        int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
             //default 서울시청 위치
             //Snackbar -> 퍼미션 허용 하시겠습니까?
-
+        // 네트워크 작업이기 때문에 asyncTask 필요?
         }else{
             try{
                 final LocationListener mLocationListener = new LocationListener() {
@@ -219,6 +220,15 @@ public class MainActivity extends AppCompatActivity
                         double longitude = location.getLongitude(); //경도
                         double latitude = location.getLatitude();   //위도
                         //double altitude = location.getAltitude();   //고도
+
+                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        markerOptions.position(userLocation);
+                        //markerOptions.title("서울시청");
+                        //markerOptions.snippet("서울특별시 시청 건물");
+                        googleMap.addMarker(markerOptions);
+                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
 
                         //Gps 위치제공자에 의한 위치변화. 오차범위가 좁다.
                         //Network 위치제공자에 의한 위치변화
@@ -241,7 +251,7 @@ public class MainActivity extends AppCompatActivity
                         Log.d("test", "onStatusChanged, provider:" + provider + ", status:" + status + " ,Bundle:" + extras);
                     }
                 };
-
+                LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 //Loc Provider : GPS
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                         2000, // 통지사이의 최소 시간간격 (miliSecond)
@@ -256,18 +266,8 @@ public class MainActivity extends AppCompatActivity
             }catch (SecurityException e){
                 e.printStackTrace();
             }
+        }
 
-
-        }*/
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(intLocation);
-        markerOptions.title("서울시청");
-        markerOptions.snippet("서울특별시 시청 건물");
-        googleMap.addMarker(markerOptions);
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(intLocation));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
     }
 
 
