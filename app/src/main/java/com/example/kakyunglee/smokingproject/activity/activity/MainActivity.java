@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -65,13 +65,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
 
                 if(no_smoking_clicked == false){
-                    Snackbar.make(view,"필터 on", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+
+                    Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
                     no_smoking_clicked = true;
 
                 }else{
-                    Snackbar.make(view,"필터 off", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
                     no_smoking_clicked = false;
                 }
 
@@ -82,8 +81,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                if(no_smoking_clicked == false){
+
+                    Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
+                    smoking_clicked = true;
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
+                    smoking_clicked = false;
+                }
             }
         });
 
@@ -91,8 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "내위치 설정", Toast.LENGTH_LONG).show();
             }
         });
 
