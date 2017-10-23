@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     DrawerLayout drawer;
     boolean no_smoking_clicked = false;
     boolean smoking_clicked = false;
-
-    // 움직이는 마커
     MarkerOptions markerOptions = new MarkerOptions();
+    // 움직이는 마커
+
     //위치정보 제공자
 
     @Override
@@ -239,6 +239,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        googleMap.setMinZoomPreference(17.0f);
+        googleMap.setMaxZoomPreference(18.0f);
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+        googleMap.setMyLocationEnabled(true);
+
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                googleMap.clear();
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                markerOptions.position(latLng);
+                googleMap.addMarker(markerOptions);
+            }
+        });
+        /*googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+
+                return false;
+            }
+        });*/
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
@@ -246,8 +268,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Snackbar -> 퍼미션 허용 하시겠습니까?
         // 네트워크 작업이기 때문에 asyncTask 필요?
         }else{
+
+            /*LatLng userLocation = new LatLng(37.566673, 126.978412);
+            markerOptions.position(userLocation);
+            googleMap.addMarker(markerOptions);*/
             try{
-                final LocationListener mLocationListener = new LocationListener() {
+                /*final LocationListener mLocationListener = new LocationListener() {
                     public void onLocationChanged(Location location) {
                         //여기서 위치값이 갱신되면 이벤트가 발생한다.
                         //값은 Location 형태로 리턴되며 좌표 출력 방법은 다음과 같다.
@@ -261,12 +287,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //double altitude = location.getAltitude();   //고도
 
                         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
                         markerOptions.position(userLocation);
                         //markerOptions.title("서울시청");
                         //markerOptions.snippet("서울특별시 시청 건물");
-                        googleMap.addMarker(markerOptions);
-                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-
+                        //
+                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(19));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
 
                         //Gps 위치제공자에 의한 위치변화. 오차범위가 좁다.
@@ -301,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         2000, // 통지사이의 최소 시간간격 (miliSecond)
                         1, // 통지사이의 최소 변경거리 (m)
                         mLocationListener);
-
+*/
             }catch (SecurityException e){
                 e.printStackTrace();
             }
