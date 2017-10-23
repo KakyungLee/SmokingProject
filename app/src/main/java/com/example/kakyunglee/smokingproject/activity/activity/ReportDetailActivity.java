@@ -18,10 +18,12 @@ public class ReportDetailActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_detail);
 
+        setTitle("상세 신고");
+
         Spinner spinner = (Spinner)findViewById(R.id.report_spinner);
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.report_detail,android.R.layout.simple_spinner_dropdown_item);
-        spinner.setDropDownVerticalOffset(150);
+        spinner.setDropDownVerticalOffset(120);
         spinner.setAdapter(adapter);
     }
 }

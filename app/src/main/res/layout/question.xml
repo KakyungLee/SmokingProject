@@ -9,7 +9,8 @@
     <Spinner
         android:id="@+id/question_spinner"
         android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        android:layout_height="40dp"
+        android:backgroundTint="@color/lightMain"/>
 
     <TextView
         android:id="@+id/question_title"
@@ -24,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/question_title"
-        android:hint="제목을 입력하세요"/>
+        android:hint="제목을 입력하세요"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/question_content"
@@ -32,7 +34,8 @@
         android:layout_height="wrap_content"
         android:text="내용"
         android:textColor="@color/mainColor"
-        android:layout_below="@+id/question_title_edit"/>
+        android:layout_below="@+id/question_title_edit"
+        android:layout_marginTop="8dp"/>
 
     <EditText
         android:id="@+id/question_content_edit"
@@ -40,22 +43,25 @@
         android:layout_height="250dp"
         android:layout_below="@id/question_content"
         android:gravity="left"
-        android:hint="내용을 입력하세요"/>
+        android:hint="내용을 입력하세요"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/question_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="내용"
+        android:text="E-mail"
         android:textColor="@color/mainColor"
-        android:layout_below="@+id/question_content_edit"/>
+        android:layout_below="@+id/question_content_edit"
+        android:layout_marginTop="8dp"/>
 
     <EditText
         android:id="@+id/question_email_edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@id/question_email"
-        android:hint="답변 받을 이메일 주소를 입력하세요"/>
+        android:hint="답변 받을 이메일 주소를 입력하세요"
+        android:background="@color/white"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

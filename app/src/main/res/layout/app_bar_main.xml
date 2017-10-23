@@ -35,7 +35,9 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/toolbar"
         android:layout_margin="5dp"
-        android:src="@drawable/no_smoking_black128" />
+        android:src="@drawable/no_smoking_black128"
+        android:backgroundTint="@color/white"
+        android:background="@color/white"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/smoking_area"
@@ -44,7 +46,8 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/none_smoking_area"
         android:layout_margin="5dp"
-        android:src="@drawable/smoking_balck128"/>
+        android:src="@drawable/smoking_balck128"
+        android:backgroundTint="@color/white"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/my_location"
@@ -53,7 +56,8 @@
         android:layout_margin="5dp"
         android:layout_above="@+id/address"
         android:layout_alignParentEnd="true"
-        app:srcCompat="@android:drawable/ic_menu_mylocation" />
+        app:srcCompat="@android:drawable/ic_menu_mylocation"
+        android:backgroundTint="@color/white"/>
 
     <TextView
         android:id="@+id/address"
