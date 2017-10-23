@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 
@@ -43,8 +43,7 @@ public class ReportDetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 openGallery();
-                Snackbar.make(v,"get image from gallery", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "get image from gallery", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -53,8 +52,7 @@ public class ReportDetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 openCamera();
-                Snackbar.make(v,"get image from camera", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
             }
         });
     }
