@@ -35,7 +35,7 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/toolbar"
         android:layout_margin="5dp"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        android:src="@drawable/no_smoking_black128" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/smoking_area"
@@ -44,7 +44,7 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/none_smoking_area"
         android:layout_margin="5dp"
-        app:srcCompat="@android:drawable/btn_star"/>
+        android:src="@drawable/smoking_balck128"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/my_location"
@@ -64,6 +64,7 @@
         android:background="@color/app_title"
         android:layout_marginLeft="-10dp"
         android:layout_marginRight="-10dp"
+        android:paddingLeft="10dp"
         android:layout_above="@+id/report"
         android:layout_alignParentStart="true"
         android:gravity="center_vertical"/>

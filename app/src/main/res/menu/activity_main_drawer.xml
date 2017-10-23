@@ -13,7 +13,7 @@
     <item
         android:id="@+id/nav_question"
         android:icon="@drawable/ic_menu_send"
-        android:title="일반문의" />
+        android:title="정부문의" />
 
     <item
         android:id="@+id/nav_info"

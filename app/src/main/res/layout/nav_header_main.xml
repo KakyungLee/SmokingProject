@@ -16,8 +16,9 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="여기선 피지마"
-        android:textSize="80dp"
-        android:textColor="@color/app_title"/>
+        android:textSize="25dp"
+        android:textColor="@color/app_title"
+        android:gravity="center_vertical"/>
 
 
 </LinearLayout>

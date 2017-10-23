@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <Spinner
+        android:id="@+id/report_spinner"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="40dp"/>
@@ -42,22 +43,32 @@
         android:gravity="bottom">
         <ImageButton
             android:id="@+id/open_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_gallery"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_menu_gallery"
+            android:background="@color/white"
+            android:layout_marginLeft="10dp"
+            android:tint="@color/mainColor"/>
 
         <ImageButton
             android:id="@+id/open_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_menu_camera"
-            android:layout_toRightOf="@+id/open_gallery"/>
+            android:layout_toRightOf="@+id/open_gallery"
+            android:background="@color/white"
+            android:layout_marginLeft="10dp"
+            android:tint="@color/mainColor"/>
         <Button
             android:id="@+id/submit_report"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="submit"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:textColor="@color/mainColor"
+            android:background="@color/white"/>
     </RelativeLayout>
 
 </LinearLayout>

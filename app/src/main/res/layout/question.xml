@@ -1,11 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <Spinner
+        android:id="@+id/question_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="일반문의 작성창 입니다. "/>
+        android:id="@+id/question_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목"
+        android:textColor="@color/mainColor"
+        android:layout_below="@+id/question_spinner"/>
 
-</LinearLayout>
+    <EditText
+        android:id="@+id/question_title_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/question_title"
+        android:hint="제목을 입력하세요"/>
+
+    <TextView
+        android:id="@+id/question_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="내용"
+        android:textColor="@color/mainColor"
+        android:layout_below="@+id/question_title_edit"/>
+
+    <EditText
+        android:id="@+id/question_content_edit"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/question_content"
+        android:gravity="left"
+        android:hint="내용을 입력하세요"/>
+
+    <TextView
+        android:id="@+id/question_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="내용"
+        android:textColor="@color/mainColor"
+        android:layout_below="@+id/question_content_edit"/>
+
+    <EditText
+        android:id="@+id/question_email_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_email"
+        android:hint="답변 받을 이메일 주소를 입력하세요"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="submit"
+            android:textColor="@color/mainColor"
+            android:background="@color/white"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
