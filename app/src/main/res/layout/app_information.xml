@@ -65,6 +65,7 @@
         android:textColor="@color/mainColor"
         android:text="@string/app_info_button"
         android:textSize="30dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>

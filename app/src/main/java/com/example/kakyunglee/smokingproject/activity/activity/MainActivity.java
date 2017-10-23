@@ -1,23 +1,31 @@
 package com.example.kakyunglee.smokingproject.activity.activity;
 
+import android.Manifest;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,9 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 
-public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     DrawerLayout drawer;
+    boolean no_smoking_clicked = false;
+    boolean smoking_clicked = false;
 
     // 움직이는 마커
     MarkerOptions markerOptions = new MarkerOptions();
@@ -50,14 +59,51 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.my_location);
+
+
+        ImageButton fab_no_smoking = (ImageButton) findViewById(R.id.none_smoking_area);
+        fab_no_smoking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(no_smoking_clicked == false){
+
+                    Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
+                    no_smoking_clicked = true;
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
+                    no_smoking_clicked = false;
+                }
+
+            }
+        });
+
+        ImageButton fab_smoking = (ImageButton) findViewById(R.id.smoking_area);
+        fab_smoking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(no_smoking_clicked == false){
+
+                    Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
+                    smoking_clicked = true;
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
+                    smoking_clicked = false;
+                }
+            }
+        });
+
+        ImageButton fab = (ImageButton) findViewById(R.id.my_location);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(getApplicationContext(), "내위치 설정", Toast.LENGTH_LONG).show();
             }
         });
+
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

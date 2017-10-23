@@ -28,33 +28,39 @@
         android:layout_below="@+id/toolbar"
         class="com.google.android.gms.maps.MapFragment" />
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageButton
         android:id="@+id/none_smoking_area"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/toolbar"
         android:layout_margin="5dp"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        android:src="@drawable/no_smoking_black128"
+        android:backgroundTint="@color/white"
+        android:background="@color/white"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageButton
         android:id="@+id/smoking_area"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/none_smoking_area"
         android:layout_margin="5dp"
-        app:srcCompat="@android:drawable/btn_star"/>
+        android:src="@drawable/smoking_balck128"
+        android:backgroundTint="@color/white"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageButton
         android:id="@+id/my_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
         android:layout_margin="5dp"
         android:layout_above="@+id/address"
         android:layout_alignParentEnd="true"
-        app:srcCompat="@android:drawable/ic_menu_mylocation" />
-
+        android:backgroundTint="@color/white"
+        android:src="@drawable/question_round"/>
     <TextView
         android:id="@+id/address"
         android:layout_width="match_parent"
@@ -64,6 +70,7 @@
         android:background="@color/app_title"
         android:layout_marginLeft="-10dp"
         android:layout_marginRight="-10dp"
+        android:paddingLeft="10dp"
         android:layout_above="@+id/report"
         android:layout_alignParentStart="true"
         android:gravity="center_vertical"/>

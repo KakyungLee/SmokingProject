@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="report_detail_menu">
-        <item>금연 거리 지정 요청</item>
-        <item>불법 흡연 목격 신고</item>
-        <item>흡연 시설 관리 요청</item>
-    </string-array>
-</resources>

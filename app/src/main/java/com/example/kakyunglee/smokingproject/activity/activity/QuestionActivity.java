@@ -2,6 +2,8 @@ package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.kakyunglee.smokingproject.R;
 
@@ -15,6 +17,15 @@ public class QuestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question);
+
+        setTitle("정부 문의");
+
+
+        Spinner spinner = (Spinner)findViewById(R.id.question_spinner);
+
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.question_detail,android.R.layout.simple_spinner_dropdown_item);
+        spinner.setDropDownVerticalOffset(120);
+        spinner.setAdapter(adapter);
     }
 }
 

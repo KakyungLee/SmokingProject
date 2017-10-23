@@ -24,4 +24,20 @@
     <string name="app_info_version">version 1.0</string>
     <string name="app_info_button">앱 문의메일 보내기</string>
 
+    <string-array name="report_detail">
+        <item>금연 거리 지정 요청</item>
+        <item>불법 흡연 목격 신고</item>
+        <item>흡연 시설 관리 요청</item>
+    </string-array>
+
+    <string-array name="question_detail">
+        <item>문의 종류</item>
+        <item>흡/금연 법률 질문</item>
+        <item>흡/금연 정책 제안</item>
+        <item>신고 관련 질문</item>
+        <item>흡연시설 문의</item>
+        <item>금연시설 문의</item>
+        <item>기타</item>
+    </string-array>
+
 </resources>
