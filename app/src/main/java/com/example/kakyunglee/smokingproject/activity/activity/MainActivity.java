@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
+import com.example.kakyunglee.smokingproject.activity.util.GeoRetrofit;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -247,20 +248,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-
+                LatLng targetLocation= latLng;
                 googleMap.clear();
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 markerOptions.position(latLng);
                 googleMap.addMarker(markerOptions);
+                Toast.makeText(MainActivity.this,targetLocation.toString(),Toast.LENGTH_SHORT).show();
+                //GeoRetrofit.getInstance().getRetrofit().create()
             }
         });
-        /*googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
 
                 return false;
             }
-        });*/
+        });
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
