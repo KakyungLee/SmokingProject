@@ -1,6 +1,7 @@
 package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ public class ReportDetailActivity extends AppCompatActivity{
     private final int CROP_FROM_IMAGE= 2;
 
     private Uri mImageCaptureUir;
+    ImageView loadImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class ReportDetailActivity extends AppCompatActivity{
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.report_detail,android.R.layout.simple_spinner_dropdown_item);
         spinner.setDropDownVerticalOffset(120);
         spinner.setAdapter(adapter);
+        loadImage = (ImageView)findViewById(R.id.load_image) ;
 
         ImageButton btnGallery = (ImageButton)findViewById(R.id.open_gallery);
         btnGallery.setOnClickListener(new View.OnClickListener() {
@@ -59,14 +63,11 @@ public class ReportDetailActivity extends AppCompatActivity{
 
     public  void openCamera()
     {
-        // 카메라 터짐..
-        /*
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String url = "temp_"+ String.valueOf(System.currentTimeMillis())+".jpg";
-        mImageCaptureUir = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),url));
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,mImageCaptureUir);
+        String url =  MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,url);
         startActivityForResult(intent,PICK_FROM_CAMERA);
-        */
+
     }
     public  void openGallery()
     {
@@ -75,6 +76,26 @@ public class ReportDetailActivity extends AppCompatActivity{
         startActivityForResult(intent,PICK_FROM_ALBUM);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
 
+        if(resultCode != RESULT_OK)
+            return;
+
+        switch(requestCode){
+            case PICK_FROM_CAMERA :
+                Bundle extras = data.getExtras();
+                if(extras != null){
+                    Bitmap bitmap = extras.getParcelable("data");
+                    loadImage.setImageBitmap(bitmap);
+                }
+                break;
+            case PICK_FROM_ALBUM :
+                mImageCaptureUir = data.getData();
+                loadImage.setImageURI(mImageCaptureUir);
+                break;
+        }
+    }
 
 }
