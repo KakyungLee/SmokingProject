@@ -125,6 +125,7 @@
             android:layout_marginTop="5dp"/>
 
         <Button
+            android:id="@+id/postquest_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"

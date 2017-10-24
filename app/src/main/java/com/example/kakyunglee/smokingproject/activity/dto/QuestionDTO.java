@@ -2,12 +2,33 @@ package com.example.kakyunglee.smokingproject.activity.dto;
 
 // 향후 추가될 가능성이 있음 > db구조와 맞춤 1022
 public class QuestionDTO {
-	//public int id;
+	public int id;
+	public String title;
 	public int report_category_id;
 	public String email;
 	public String contents;
 	public String image_url;
-	
+	public String created_at;
+
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getCreated_at() {
+		return created_at;
+	}
+	public void setCreated_at(String created_at) {
+		this.created_at = created_at;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	public int getReport_category_id() {
 		return report_category_id;
 	}
@@ -32,6 +53,5 @@ public class QuestionDTO {
 	public void setImage_url(String image_url) {
 		this.image_url = image_url;
 	}
-	
 	
 }
