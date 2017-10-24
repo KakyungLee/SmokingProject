@@ -16,7 +16,7 @@ import com.example.kakyunglee.smokingproject.R;
 
 public class NoticeListActivity extends AppCompatActivity{
 
-    private String[] listMenu;
+    private String[] listMenu={"test1","test2","test3"};
     private int detail_id;
 
     @Override
@@ -32,14 +32,14 @@ public class NoticeListActivity extends AppCompatActivity{
 
         //end 서버에서 공지사항 리스트 가져오기
 
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listMenu);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listMenu);
         ListView listView = (ListView)findViewById(R.id.list_notice);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent  intent = new Intent(NoticeListActivity.this, LawDetailActivity.class);
+                Intent  intent = new Intent(NoticeListActivity.this, NoticeDetailActivity.class);
                 intent.putExtra("title",listMenu[position]);
                 startActivity(intent);
             }

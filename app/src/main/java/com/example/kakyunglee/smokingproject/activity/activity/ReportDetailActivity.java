@@ -8,6 +8,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -33,6 +35,7 @@ public class ReportDetailActivity extends AppCompatActivity{
     private Uri mImageCaptureUir;
     ImageView loadImage;
     ByteArrayOutputStream byteBuff;
+    private String spinnerSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +44,23 @@ public class ReportDetailActivity extends AppCompatActivity{
 
         setTitle("상세 신고");
 
-        Spinner spinner = (Spinner)findViewById(R.id.report_spinner);
+        final Spinner spinner = (Spinner)findViewById(R.id.report_spinner);
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.report_detail,android.R.layout.simple_spinner_dropdown_item);
         spinner.setDropDownVerticalOffset(120);
         spinner.setAdapter(adapter);
+        /*
+        spinner.setSelection(0);
+        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                spinnerSelect = position +"";
+            }
+        });
+        */
+
+
+
         loadImage = (ImageView)findViewById(R.id.load_image) ;
 
         ImageButton btnGallery = (ImageButton)findViewById(R.id.open_gallery);
@@ -65,6 +80,18 @@ public class ReportDetailActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
             }
         });
+
+        final EditText editText = (EditText) findViewById(R.id.report_detail_content);
+
+        Button button = (Button)findViewById(R.id.submit_report);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // 서버로 데이터 전송하기
+                Toast.makeText(getApplicationContext(),spinnerSelect,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public  void openCamera()

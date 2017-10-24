@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:src="@drawable/ic_menu_gallery"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:tint="@color/white"/>
 
     <TextView
@@ -56,16 +56,5 @@
         android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:layout_below="@+id/app_api"/>
-
-    <Button
-        android:id="@+id/mail_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/app_title"
-        android:textColor="@color/mainColor"
-        android:text="@string/app_info_button"
-        android:textSize="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>
