@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -23,12 +24,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
+import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
+import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
+import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 
@@ -115,8 +124,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 int id = menuItem.getItemId();
 
                 if (id == R.id.nav_notice) {
-                    Intent intent = new Intent(MainActivity.this,NoticeListActivity.class);
-                    startActivity(intent);
+
+                    GetNoticeInfo getNoticeInfo = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
+                    final Call<NoticeListDTO> call=getNoticeInfo.noticeInfo();
+                    new GetNoticeList().execute(call);
+
 
                 } else if (id == R.id.nav_law) {
                     Intent intent = new Intent(MainActivity.this,LawListActivity.class);
@@ -235,6 +247,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
+    ////////////////////// retrofit 삽입 : NoticeList/////////////////////////
+    private class GetNoticeList extends AsyncTask<Call,Void, NoticeListDTO> {
+        @Override
+        protected NoticeListDTO doInBackground(Call ... params){
+            try{
+                Call<NoticeListDTO> call = params[0];
+                Response<NoticeListDTO> response = call.execute();
+                return response.body();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(NoticeListDTO result) {
+            Bundle extras=new Bundle();
+            extras.putSerializable("notice_list",result);
+            Intent intent = new Intent(MainActivity.this,NoticeListActivity.class);
+            intent.putExtras(extras);
+            startActivity(intent);
+        }
+
+    }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {

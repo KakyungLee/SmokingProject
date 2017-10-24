@@ -1,6 +1,8 @@
 package com.example.kakyunglee.smokingproject.activity.dto;
 
-public class NoticeDTO {
+import java.io.Serializable;
+
+public class NoticeDTO implements Serializable {
 	int no;
 	String created_at;
 	String title;
@@ -35,7 +37,7 @@ public class NoticeDTO {
 	}
 	public String getExt_url() {
 		return ext_url;
-		
+
 	}
 	public void setExt_url(String ext_url) {
 		this.ext_url=ext_url;
@@ -51,5 +53,6 @@ public class NoticeDTO {
 	public void setType(int type) {
 		this.type=type;
 	}
-	
+
 }
+
