@@ -4,7 +4,10 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +28,11 @@ import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
-import com.example.kakyunglee.smokingproject.activity.util.GeoRetrofit;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,16 +43,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback{
+        implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    double currentUserLetitute;
-    double currentUserLongitute;
-    boolean isInit = true;
+    double currentUserLatitude;
+    double currentUserLongitude;
+    private GoogleApiClient mGoogleApiClient;
     boolean no_smoking_clicked = false;
     boolean smoking_clicked = false;
     GoogleMap mGoogleMap;
     DrawerLayout drawer;
-
+    private FusedLocationProviderClient mFusedLocationClient;
     SelectedLocation infoLocation = new SelectedLocation();
     MarkerOptions markerOptions = new MarkerOptions();
     // 움직이는 마커
@@ -56,6 +64,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //init Api Client
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
        FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment)fragmentManager
                 .findFragmentById(R.id.map);
@@ -63,8 +79,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         ImageButton fab_no_smoking = (ImageButton) findViewById(R.id.none_smoking_area);
         fab_no_smoking.setOnClickListener(new View.OnClickListener() {
@@ -209,8 +223,15 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         });
+    }
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
 
-
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -252,7 +273,7 @@ public class MainActivity extends AppCompatActivity
         mGoogleMap.setMinZoomPreference(17.0f);
         mGoogleMap.setMaxZoomPreference(18.0f);
         //markerOptions.position(new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude()));
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentUserLetitute,currentUserLongitute)));
+
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
@@ -294,8 +315,33 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+    }
+    public Location requestUserLastLocation(){
+        int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if(userLocPermissionCheck != PackageManager.PERMISSION_DENIED)
+            return LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        return null;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        Location mLastLocation = requestUserLastLocation();
+        if (mLastLocation != null) {
+            LatLng target = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+            markerOptions.position(target);
+            mGoogleMap.addMarker(markerOptions);
+        }
+    }
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 
-
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e("api client error",connectionResult.getErrorMessage());
+    }
 }
