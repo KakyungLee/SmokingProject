@@ -12,13 +12,6 @@
         android:layout_height="40dp"
         android:backgroundTint="@color/lightMain"/>
 
-    <ImageView
-        android:id="@+id/load_image"
-        android:layout_weight="3"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/common_google_signin_btn_text_dark"/>
-
     <TextView
         android:layout_weight="1"
         android:id="@+id/address"
@@ -32,12 +25,22 @@
         android:gravity="center_vertical"
         android:paddingLeft="10dp"/>
 
+
+
     <EditText
+        android:id="@+id/report_detail_content"
         android:layout_weight="3"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:hint="이곳에 내용을 입력하세요."
         android:gravity="left"/>
+
+    <ImageView
+        android:id="@+id/load_image"
+        android:layout_weight="3"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/common_google_signin_btn_text_dark"/>
 
     <RelativeLayout
         android:layout_weight="1"

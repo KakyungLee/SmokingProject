@@ -8,12 +8,19 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by KakyungLee on 2017-10-08.
@@ -27,6 +34,8 @@ public class ReportDetailActivity extends AppCompatActivity{
 
     private Uri mImageCaptureUir;
     ImageView loadImage;
+    ByteArrayOutputStream byteBuff;
+    private String spinnerSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +44,23 @@ public class ReportDetailActivity extends AppCompatActivity{
 
         setTitle("상세 신고");
 
-        Spinner spinner = (Spinner)findViewById(R.id.report_spinner);
+        final Spinner spinner = (Spinner)findViewById(R.id.report_spinner);
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.report_detail,android.R.layout.simple_spinner_dropdown_item);
         spinner.setDropDownVerticalOffset(120);
         spinner.setAdapter(adapter);
+        /*
+        spinner.setSelection(0);
+        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                spinnerSelect = position +"";
+            }
+        });
+        */
+
+
+
         loadImage = (ImageView)findViewById(R.id.load_image) ;
 
         ImageButton btnGallery = (ImageButton)findViewById(R.id.open_gallery);
@@ -59,6 +80,18 @@ public class ReportDetailActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
             }
         });
+
+        final EditText editText = (EditText) findViewById(R.id.report_detail_content);
+
+        Button button = (Button)findViewById(R.id.submit_report);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // 서버로 데이터 전송하기
+                Toast.makeText(getApplicationContext(),spinnerSelect,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public  void openCamera()
@@ -94,8 +127,32 @@ public class ReportDetailActivity extends AppCompatActivity{
             case PICK_FROM_ALBUM :
                 mImageCaptureUir = data.getData();
                 loadImage.setImageURI(mImageCaptureUir);
+                InputStream is = null;
+                try {
+                    is = getContentResolver().openInputStream(data.getData());
+                    getBytes(is);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
         }
+    }
+
+    public void getBytes(InputStream is) throws IOException {
+        byteBuff = new ByteArrayOutputStream();
+
+        int buffSize = 1024;
+        byte[] buff = new byte[buffSize];
+
+        int len = 0;
+        while ((len = is.read(buff)) != -1) {
+            byteBuff.write(buff, 0, len);
+        }
+        //return byteBuff.toByteArray();
     }
 
 }
