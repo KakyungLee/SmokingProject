@@ -29,6 +29,8 @@
         <activity android:name=".activity.activity.QuestionActivity" />
         <activity android:name=".activity.activity.ReportDetailActivity" />
         <activity android:name=".activity.activity.AppInfoActivity" />
+        <activity android:name=".activity.activity.LawDetailActivity" />
+        <activity android:name=".activity.activity.LawSubListActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

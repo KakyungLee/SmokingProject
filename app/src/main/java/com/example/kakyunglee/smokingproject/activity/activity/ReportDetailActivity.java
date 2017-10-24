@@ -15,6 +15,11 @@ import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * Created by KakyungLee on 2017-10-08.
  */
@@ -27,6 +32,7 @@ public class ReportDetailActivity extends AppCompatActivity{
 
     private Uri mImageCaptureUir;
     ImageView loadImage;
+    ByteArrayOutputStream byteBuff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +100,32 @@ public class ReportDetailActivity extends AppCompatActivity{
             case PICK_FROM_ALBUM :
                 mImageCaptureUir = data.getData();
                 loadImage.setImageURI(mImageCaptureUir);
+                InputStream is = null;
+                try {
+                    is = getContentResolver().openInputStream(data.getData());
+                    getBytes(is);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
         }
+    }
+
+    public void getBytes(InputStream is) throws IOException {
+        byteBuff = new ByteArrayOutputStream();
+
+        int buffSize = 1024;
+        byte[] buff = new byte[buffSize];
+
+        int len = 0;
+        while ((len = is.read(buff)) != -1) {
+            byteBuff.write(buff, 0, len);
+        }
+        //return byteBuff.toByteArray();
     }
 
 }

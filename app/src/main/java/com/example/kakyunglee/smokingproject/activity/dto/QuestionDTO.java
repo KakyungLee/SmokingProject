@@ -2,17 +2,12 @@ package com.example.kakyunglee.smokingproject.activity.dto;
 
 // 향후 추가될 가능성이 있음 > db구조와 맞춤 1022
 public class QuestionDTO {
-	public int id;
+	//public int id;
 	public int report_category_id;
 	public String email;
 	public String contents;
 	public String image_url;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 	public int getReport_category_id() {
 		return report_category_id;
 	}
