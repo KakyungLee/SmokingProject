@@ -3,9 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ListView
+        android:id="@+id/list_notice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="공지사항 리스트 입니다. "/>
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+    </ListView>
 
 </LinearLayout>

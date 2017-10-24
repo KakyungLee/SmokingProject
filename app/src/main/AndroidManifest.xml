@@ -31,6 +31,7 @@
         <activity android:name=".activity.activity.AppInfoActivity" />
         <activity android:name=".activity.activity.LawDetailActivity" />
         <activity android:name=".activity.activity.LawSubListActivity" />
+        <activity android:name=".activity.activity.NoticeDetailActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

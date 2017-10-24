@@ -2,12 +2,8 @@ package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.Manifest;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
-import com.example.kakyunglee.smokingproject.activity.util.GeoRetrofit;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -171,6 +165,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
+
+                        /// DTO에 위도 경도 넣어주기 & 서버 전송송
+
+                       //
 
                         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                         View view = inflater.inflate(R.layout.report_detail_dialog,null);

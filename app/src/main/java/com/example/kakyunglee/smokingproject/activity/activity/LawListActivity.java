@@ -51,6 +51,4 @@ public class LawListActivity extends AppCompatActivity{
 
         });
    }
-
-
 }
