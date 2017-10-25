@@ -5,7 +5,10 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +31,12 @@ import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
+import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -41,10 +51,18 @@ import retrofit2.Response;
 
 import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-    DrawerLayout drawer;
+public class MainActivity extends AppCompatActivity
+        implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    double currentUserLatitude;
+    double currentUserLongitude;
+    private GoogleApiClient mGoogleApiClient;
     boolean no_smoking_clicked = false;
     boolean smoking_clicked = false;
+    GoogleMap mGoogleMap;
+    DrawerLayout drawer;
+    private FusedLocationProviderClient mFusedLocationClient;
+    SelectedLocation infoLocation = new SelectedLocation();
     MarkerOptions markerOptions = new MarkerOptions();
 
     ImageButton fab_no_smoking;
@@ -58,15 +76,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       FragmentManager fragmentManager = getFragmentManager();
+        //init Api Client
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment)fragmentManager
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         fab_no_smoking = (ImageButton) findViewById(R.id.none_smoking_area);
         fab_no_smoking.setOnClickListener(new View.OnClickListener() {
@@ -210,8 +234,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
             }
         });
+    }
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
 
-
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -272,102 +303,86 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        googleMap.setMinZoomPreference(17.0f);
-        googleMap.setMaxZoomPreference(18.0f);
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-        googleMap.setMyLocationEnabled(true);
+        mGoogleMap = googleMap;
+        mGoogleMap.setMinZoomPreference(17.0f);
+        mGoogleMap.setMaxZoomPreference(19.0f);
+        //markerOptions.position(new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude()));
 
-        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                LatLng targetLocation= latLng;
-                googleMap.clear();
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                markerOptions.position(latLng);
-                googleMap.addMarker(markerOptions);
-                Toast.makeText(MainActivity.this,targetLocation.toString(),Toast.LENGTH_SHORT).show();
-                //GeoRetrofit.getInstance().getRetrofit().create()
-            }
-        });
-        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-
-                return false;
-            }
-        });
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
             //default 서울시청 위치
             //Snackbar -> 퍼미션 허용 하시겠습니까?
-        // 네트워크 작업이기 때문에 asyncTask 필요?
+            // 네트워크 작업이기 때문에 asyncTask 필요?
         }else{
 
             /*LatLng userLocation = new LatLng(37.566673, 126.978412);
             markerOptions.position(userLocation);
             googleMap.addMarker(markerOptions);*/
-            try{
-                /*final LocationListener mLocationListener = new LocationListener() {
-                    public void onLocationChanged(Location location) {
-                        //여기서 위치값이 갱신되면 이벤트가 발생한다.
-                        //값은 Location 형태로 리턴되며 좌표 출력 방법은 다음과 같다.
-                        //정확도 테스트 요구
-                        float accuracy = location.getAccuracy();    //정확도
-                        String provider = location.getProvider();   //위치제공자
 
-                        Log.d("test", "onLocationChanged, location:" + location);
-                        double longitude = location.getLongitude(); //경도
-                        double latitude = location.getLatitude();   //위도
-                        //double altitude = location.getAltitude();   //고도
-
-                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        markerOptions.position(userLocation);
-                        //markerOptions.title("서울시청");
-                        //markerOptions.snippet("서울특별시 시청 건물");
-                        //
-                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(19));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
-
-                        //Gps 위치제공자에 의한 위치변화. 오차범위가 좁다.
-                        //Network 위치제공자에 의한 위치변화
-                        //Network 위치는 Gps에 비해 정확도가 많이 떨어진다.
-                        //tv.setText("위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude
-                        //       + "\n고도 : " + altitude + "\n정확도 : "  + accuracy);
-                    }
-                    public void onProviderDisabled(String provider) {
-                        // Disabled시
-                        Log.d("test", "onProviderDisabled, provider:" + provider);
-                    }
-
-                    public void onProviderEnabled(String provider) {
-                        // Enabled시
-                        Log.d("test", "onProviderEnabled, provider:" + provider);
-                    }
-
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                        // 변경시
-                        Log.d("test", "onStatusChanged, provider:" + provider + ", status:" + status + " ,Bundle:" + extras);
-                    }
-                };
-                LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                //Loc Provider : GPS
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        2000, // 통지사이의 최소 시간간격 (miliSecond)
-                        1, // 통지사이의 최소 변경거리 (m)
-                        mLocationListener);
-                //Loc Provider : Network
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        2000, // 통지사이의 최소 시간간격 (miliSecond)
-                        1, // 통지사이의 최소 변경거리 (m)
-                        mLocationListener);
-*/
-            }catch (SecurityException e){
-                e.printStackTrace();
-            }
         }
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                LatLng targetLocation= latLng;
+                mGoogleMap.clear();
+                infoLocation.setSelectedLocationLatitude(latLng.latitude);
+                infoLocation.setSelectedLocationLongitude(latLng.longitude);
+                markerOptions.position(targetLocation);
+                mGoogleMap.addMarker(markerOptions);
+                Toast.makeText(MainActivity.this,targetLocation.toString(),Toast.LENGTH_SHORT).show();
+                //요청
+            }
+        });
+        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                Location mLastLocation = requestUserLastLocation();
+                if (mLastLocation == null) {
+                    Toast.makeText(MainActivity.this,"위치정보를 불러 올 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                renewPinnedLocation(mLastLocation);
+                return false;
+            }
+        });
+    }
+    // Permission check
+    public Location requestUserLastLocation(){
+        int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if(userLocPermissionCheck != PackageManager.PERMISSION_DENIED)
+            return LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        return null;
+    }
+    // selected Location renewing
+    public void renewPinnedLocation(Location newLocation){
+        mGoogleMap.clear();
+        infoLocation.setSelectedLocationLatitude(newLocation.getLatitude());
+        infoLocation.setSelectedLocationLongitude(newLocation.getLongitude());
+        LatLng target = new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude());
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+        markerOptions.position(target);
+        mGoogleMap.addMarker(markerOptions);
+    }
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Location mLastLocation = requestUserLastLocation();
+        if (mLastLocation == null) {
+            Toast.makeText(MainActivity.this,"위치정보를 불러 올 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        renewPinnedLocation(mLastLocation);
+    }
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e("api client error",connectionResult.getErrorMessage());
+    }
 }
