@@ -51,5 +51,5 @@ public class NoticeDTO {
 	public void setType(int type) {
 		this.type=type;
 	}
-	
+
 }

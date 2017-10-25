@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setMinZoomPreference(17.0f);
-        mGoogleMap.setMaxZoomPreference(18.0f);
+        mGoogleMap.setMaxZoomPreference(19.0f);
         //markerOptions.position(new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude()));
 
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -293,29 +293,29 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
                 LatLng targetLocation= latLng;
-
+                mGoogleMap.clear();
                 infoLocation.setSelectedLocationLatitude(latLng.latitude);
                 infoLocation.setSelectedLocationLongitude(latLng.longitude);
-
-                mGoogleMap.clear();
-                //googleMap.moveCamera(CameraUpdateFactory.newLatLng(targetLocation));
                 markerOptions.position(targetLocation);
                 mGoogleMap.addMarker(markerOptions);
                 Toast.makeText(MainActivity.this,targetLocation.toString(),Toast.LENGTH_SHORT).show();
-                //GeoRetrofit.getInstance().getRetrofit().create()
+                //요청
             }
         });
         mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                Toast.makeText(MainActivity.this,"test", Toast.LENGTH_SHORT).show();
-
+                Location mLastLocation = requestUserLastLocation();
+                if (mLastLocation == null) {
+                    Toast.makeText(MainActivity.this,"위치정보를 불러 올 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                renewPinnedLocation(mLastLocation);
                 return false;
             }
         });
-
-
     }
+    // Permission check
     public Location requestUserLastLocation(){
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck != PackageManager.PERMISSION_DENIED)
@@ -323,17 +323,24 @@ public class MainActivity extends AppCompatActivity
                 mGoogleApiClient);
         return null;
     }
-
+    // selected Location renewing
+    public void renewPinnedLocation(Location newLocation){
+        mGoogleMap.clear();
+        infoLocation.setSelectedLocationLatitude(newLocation.getLatitude());
+        infoLocation.setSelectedLocationLongitude(newLocation.getLongitude());
+        LatLng target = new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude());
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+        markerOptions.position(target);
+        mGoogleMap.addMarker(markerOptions);
+    }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
         Location mLastLocation = requestUserLastLocation();
-        if (mLastLocation != null) {
-            LatLng target = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
-            markerOptions.position(target);
-            mGoogleMap.addMarker(markerOptions);
+        if (mLastLocation == null) {
+            Toast.makeText(MainActivity.this,"위치정보를 불러 올 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
         }
+        renewPinnedLocation(mLastLocation);
     }
     @Override
     public void onConnectionSuspended(int i) {
