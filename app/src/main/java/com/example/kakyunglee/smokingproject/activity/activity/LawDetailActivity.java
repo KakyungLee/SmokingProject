@@ -2,6 +2,7 @@ package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -26,7 +27,10 @@ public class LawDetailActivity extends AppCompatActivity {
         position = intent.getExtras().getInt("position");
         title = intent.getExtras().getString("title");
 
-        setTitle(title);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_bar);
+        TextView barTitle = (TextView)findViewById(R.id.title_bar);
+        barTitle.setText(title);
 
         if(where == 0){
             setHistoryFine();

@@ -2,11 +2,13 @@ package com.example.kakyunglee.smokingproject.activity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.kakyunglee.smokingproject.R;
 
@@ -23,7 +25,7 @@ public class LawSubListActivity extends AppCompatActivity {
             "산림인접지역","자연공원","숭례문","버스 및 택시","기차",
             "공항","항공기","문화재","그외"};
     private  String title;
-    int where;
+    private int where;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,10 @@ public class LawSubListActivity extends AppCompatActivity {
         where = intent.getExtras().getInt("where");
         title = intent.getExtras().getString("title");
 
-        setTitle(title);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_bar);
+        TextView barTitle = (TextView)findViewById(R.id.title_bar);
+        barTitle.setText(title);
 
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listMenu);
         ListView listView = (ListView)findViewById(R.id.list_law);

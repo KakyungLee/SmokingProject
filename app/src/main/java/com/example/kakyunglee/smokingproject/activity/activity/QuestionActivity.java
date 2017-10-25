@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
@@ -49,6 +51,8 @@ public class QuestionActivity extends AppCompatActivity {
     private Uri mImageCaptureUir;
     private ImageView loadImage;
     private ByteArrayOutputStream byteBuff;
+    private int question_detail_id;
+    private byte[] byteArray;
 
     //////////////////////////////////////////////
     private EditText questionTitle;
@@ -56,6 +60,9 @@ public class QuestionActivity extends AppCompatActivity {
     private EditText questionEmail;
     InputStream is = null;
     private Button postImage;
+    private Spinner spinner;
+    private ImageButton btnGallery;
+    private ImageButton btnCamera;
     //////////////////////////////////////////////
 
 
@@ -64,27 +71,28 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(question);
 
-        setTitle("정부 문의");
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_bar);
+        TextView title = (TextView)findViewById(R.id.title_bar);
+        title.setText("정부문의");
+
         ///////////////////////////////////////////////////////////////////
+        spinner = (Spinner) findViewById(R.id.question_spinner);
         questionTitle = (EditText) findViewById(R.id.question_title_edit);
         questionContent = (EditText) findViewById(R.id.question_content_edit);
+        loadImage = (ImageView) findViewById(R.id.load_image_question);
         questionEmail = (EditText) findViewById(R.id.question_email_edit);
+        btnGallery = (ImageButton) findViewById(R.id.open_gallery_question);
+        btnCamera = (ImageButton) findViewById(R.id.open_camera_question);
         postImage = (Button) findViewById(R.id.postquest_btn);
         /////////////////////////////////////////////////////////////////////
 
-        Spinner spinner = (Spinner) findViewById(R.id.question_spinner);
-
+        // 스피너 어댑터 설정
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.question_detail, android.R.layout.simple_spinner_dropdown_item);
         spinner.setDropDownVerticalOffset(120);
         spinner.setAdapter(adapter);
 
-        // 스피너 클릭 리스너 만들기
-
-        // question_detail_id 얻을 수 있게 해주세요
-
-        loadImage = (ImageView) findViewById(R.id.load_image_question);
-
-        ImageButton btnGallery = (ImageButton) findViewById(R.id.open_gallery_question);
+        // 갤러리 이미지 불러오기 버튼
         btnGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +101,7 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnCamera = (ImageButton) findViewById(R.id.open_camera_question);
+        // 카메라에서 이미지 불러오기 버튼
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +110,8 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
 
+        // 스피너에서 선택된 상세 문의 내용 id
+        question_detail_id = spinner.getSelectedItemPosition();
 
         //////////////////////////////////////////
         postImage.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +157,9 @@ public class QuestionActivity extends AppCompatActivity {
                 if (extras != null) {
                     Bitmap bitmap = extras.getParcelable("data");
                     loadImage.setImageBitmap(bitmap);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+                    byteArray = stream.toByteArray();
                 }
                 break;
             case PICK_FROM_ALBUM:

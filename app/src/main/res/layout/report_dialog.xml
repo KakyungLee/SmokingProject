@@ -12,20 +12,25 @@
         android:layout_height="50dp"
         android:text="@string/report_dialog_title"
         android:gravity="center"
-        android:textSize="25dp"/>
+        android:textSize="25dp"
+        android:textColor="@color/colorAccent"/>
 
     <TextView
         android:id="@+id/report_dialog_address"
         android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:text="서울특별시 동대문구 답십리 1동 323-18호"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="서울특별시 광진구 군자동 209"
+        android:gravity="center"
+        android:textSize="15dp"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="@string/report_dialog_sub"/>
+        android:text="@string/report_dialog_sub"
+        android:textSize="15dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/report_dialog_left_button"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:textSize="15dp"/>
 
         <Button
             android:id="@+id/yes"
@@ -46,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/report_dialog_right_button"
-            android:background="@color/mainColor"/>
+            android:background="@color/mainColor"
+            android:textSize="15dp"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean no_smoking_clicked = false;
     boolean smoking_clicked = false;
     MarkerOptions markerOptions = new MarkerOptions();
+
+    ImageButton fab_no_smoking;
+    ImageButton fab_smoking;
     // 움직이는 마커
 
     //위치정보 제공자
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        ImageButton fab_no_smoking = (ImageButton) findViewById(R.id.none_smoking_area);
+        fab_no_smoking = (ImageButton) findViewById(R.id.none_smoking_area);
         fab_no_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,41 +76,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(no_smoking_clicked == false){
 
                     Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
+                    fab_no_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
                     no_smoking_clicked = true;
 
                 }else{
                     Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
+                    fab_no_smoking.setBackgroundResource(R.drawable.filter_button);
                     no_smoking_clicked = false;
                 }
 
             }
         });
 
-        ImageButton fab_smoking = (ImageButton) findViewById(R.id.smoking_area);
+        fab_smoking = (ImageButton) findViewById(R.id.smoking_area);
         fab_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(no_smoking_clicked == false){
+                if(smoking_clicked == false){
 
                     Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
+                    fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
+
                     smoking_clicked = true;
 
                 }else{
                     Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
+                    fab_smoking.setBackgroundResource(R.drawable.filter_button);
                     smoking_clicked = false;
                 }
             }
         });
-
-        ImageButton fab = (ImageButton) findViewById(R.id.my_location);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "내위치 설정", Toast.LENGTH_LONG).show();
-            }
-        });
-
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

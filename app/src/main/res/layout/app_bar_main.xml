@@ -11,13 +11,15 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/white"
+        android:foregroundTint="@color/mainColor"
         app:popupTheme="@style/AppTheme.PopupOverlay">
         <EditText
             android:id="@+id/et_search_Loc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/mainactivity_et_search_loc"/>
+            android:hint="@string/mainactivity_et_search_loc"
+            android:textColor="@color/mainColor"/>
 
     </android.support.v7.widget.Toolbar>
 
@@ -30,59 +32,55 @@
 
     <ImageButton
         android:id="@+id/none_smoking_area"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/toolbar"
-        android:layout_margin="5dp"
+        android:layout_above="@+id/smoking_area"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
         android:src="@drawable/no_smoking_black128"
-        android:backgroundTint="@color/white"
-        android:background="@color/white"/>
+        android:background="@drawable/filter_button"/>
 
     <ImageButton
         android:id="@+id/smoking_area"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/none_smoking_area"
-        android:layout_margin="5dp"
-        android:src="@drawable/smoking_balck128"
-        android:backgroundTint="@color/white"/>
-
-    <ImageButton
-        android:id="@+id/my_location"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:scaleType="fitXY"
-        android:layout_margin="5dp"
         android:layout_above="@+id/address"
-        android:layout_alignParentEnd="true"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/question_round"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:src="@drawable/smoking_balck128"
+        android:background="@drawable/filter_button"/>
+
     <TextView
         android:id="@+id/address"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="   서울특별시 동대문구 답십리 1동 323-18호"
-        android:textColor="@color/white"
-        android:background="@color/app_title"
+        android:layout_height="50dp"
+        android:text="서울특별시 광진구 군자동 209"
+        android:textColor="@color/textColor"
+        android:textSize="15dp"
+        android:background="@color/white"
         android:layout_marginLeft="-10dp"
         android:layout_marginRight="-10dp"
         android:paddingLeft="10dp"
         android:layout_above="@+id/report"
         android:layout_alignParentStart="true"
-        android:gravity="center_vertical"/>
+        android:gravity="center"/>
 
     <Button
         android:id="@+id/report"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:text="신고하기"
         android:layout_alignParentBottom="true"
         android:layout_margin="-200dp"
         android:background="@color/mainColor"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
 
 </RelativeLayout>

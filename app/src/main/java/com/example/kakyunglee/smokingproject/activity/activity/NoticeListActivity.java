@@ -3,11 +3,13 @@ package com.example.kakyunglee.smokingproject.activity.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeDTO;
@@ -34,7 +36,10 @@ public class NoticeListActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notice_list);
 
-        setTitle("공지사항");
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_bar);
+        TextView barTitle = (TextView)findViewById(R.id.title_bar);
+        barTitle.setText("공지사항");
 
         // 서버에서 공지사항 리스트 가져오기
         NoticeListDTO noticeListDto = (NoticeListDTO) this.getIntent().getExtras().get("notice_list");

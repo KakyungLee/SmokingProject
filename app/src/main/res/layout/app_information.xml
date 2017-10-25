@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_title">
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/app_icon"
@@ -11,7 +11,7 @@
         android:layout_height="100dp"
         android:src="@drawable/ic_menu_gallery"
         android:layout_marginTop="100dp"
-        android:tint="@color/white"/>
+        android:tint="@color/mainColor"/>
 
     <TextView
         android:id="@+id/app_name"
@@ -21,7 +21,7 @@
         android:textSize="20dp"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:textColor="@color/white"
+        android:textColor="@color/darkMain"
         android:layout_below="@+id/app_icon"/>
 
     <TextView
@@ -32,7 +32,7 @@
         android:textSize="20dp"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:textColor="@color/white"
+        android:textColor="@color/darkMain"
         android:layout_below="@+id/app_name"/>
 
     <TextView
@@ -43,7 +43,7 @@
         android:textSize="20dp"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:textColor="@color/white"
+        android:textColor="@color/darkMain"
         android:layout_below="@+id/app_developer"/>
 
     <TextView
@@ -54,7 +54,7 @@
         android:textSize="20dp"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:textColor="@color/white"
+        android:textColor="@color/darkMain"
         android:layout_below="@+id/app_api"/>
 
 </RelativeLayout>
