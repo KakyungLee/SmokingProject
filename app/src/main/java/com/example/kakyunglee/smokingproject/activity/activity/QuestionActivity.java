@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.dto.QuestionDTO;
-import com.example.kakyunglee.smokingproject.activity.dto.ReportDetailDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.response.QuestionResponseDTO;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.PostQuestion;
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 
@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -112,6 +113,8 @@ public class QuestionActivity extends AppCompatActivity {
                 questionDto.setContents(questionContent.getText().toString());
                 questionDto.setEmail(questionEmail.getText().toString());
                 if(is!=null) postTotalData(getBytes(is),questionDto);
+                else postTotalData(questionDto);
+
             }
         });
         //////////////////////////////////////////
@@ -178,54 +181,42 @@ public class QuestionActivity extends AppCompatActivity {
         return byteBuff.toByteArray();
     }
 
-    ///////////////////postQuestion AsyncTask///////////////////
-    private class ImageTest extends AsyncTask<Call, Void, ReportDetailDTO> {
-        @Override
-        protected ReportDetailDTO doInBackground(Call... params) {
-            try {
-                Call<ReportDetailDTO> call = params[0];
-                Response<ReportDetailDTO> response = call.execute();
-                return response.body();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ReportDetailDTO result) {
-
-        }
-
-    }
 
     //////////////////////////////////////////////////////////////////////////
     private void postTotalData(byte[] imageBytes, QuestionDTO inputData) {
         PostQuestion postReportService = ServiceRetrofit.getInstance().getRetrofit().create(PostQuestion.class);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
         String mimeType = requestFile.contentType().toString();
-        String newImage = "image." + mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
+        String newImage = new Date().toString().replaceAll(" ","")+"image." + mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
-        final Call<QuestionDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),body);
-        new ImageTest().execute(call);
+        final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),body);
+        new postQuestionCall().execute(call);
+
+    }
+
+    private void postTotalData(QuestionDTO inputData){
+
+        PostQuestion postReportService = ServiceRetrofit.getInstance().getRetrofit().create(PostQuestion.class);
+        final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),null);
+        new postQuestionCall().execute(call);
 
     }
     ////////////////////////////////////////////////////////////////////////////////
-    private class postQuestionCall extends AsyncTask<Call,Void, QuestionDTO> {
+    private class postQuestionCall extends AsyncTask<Call,Void, QuestionResponseDTO> {
         @Override
-        protected QuestionDTO doInBackground(Call ... params){
+        protected QuestionResponseDTO doInBackground(Call ... params){
             try{
-                Call<QuestionDTO> call = params[0];
-                Response<QuestionDTO> response = call.execute();
-                return response.body();
+                Call<QuestionResponseDTO> call = params[0];
+                Response response = call.execute();
+                return (QuestionResponseDTO) response.body();
             }catch(IOException e){
                 e.printStackTrace();
             }
             return null;
         }
         @Override
-        protected void onPostExecute(QuestionDTO result) {
-
+        protected void onPostExecute(QuestionResponseDTO result) {
+            Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
         }
 
     }

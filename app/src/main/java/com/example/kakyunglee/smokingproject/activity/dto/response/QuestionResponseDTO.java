@@ -1,16 +1,14 @@
-package com.example.kakyunglee.smokingproject.activity.dto;
-
-import java.util.Date;
+package com.example.kakyunglee.smokingproject.activity.dto.response;
 
 // 향후 추가될 가능성이 있음 > db구조와 맞춤 1022
-public class QuestionDTO {
+public class QuestionResponseDTO {
 	public int id;
 	public String title;
 	public int report_category_id;
 	public String email;
 	public String contents;
 	public String image_url;
-	public Date created_at;
+	public String created_at;
 
 
 	public int getId() {
@@ -19,10 +17,10 @@ public class QuestionDTO {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Date getCreated_at() {
+	public String getCreated_at() {
 		return created_at;
 	}
-	public void setCreated_at(Date created_at) {
+	public void setCreated_at(String created_at) {
 		this.created_at = created_at;
 	}
 	public String getTitle() {
@@ -55,5 +53,17 @@ public class QuestionDTO {
 	public void setImage_url(String image_url) {
 		this.image_url = image_url;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "QuestionResponseDTO{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", report_category_id=" + report_category_id +
+				", email='" + email + '\'' +
+				", contents='" + contents + '\'' +
+				", image_url='" + image_url + '\'' +
+				", created_at='" + created_at + '\'' +
+				'}';
+	}
 }
