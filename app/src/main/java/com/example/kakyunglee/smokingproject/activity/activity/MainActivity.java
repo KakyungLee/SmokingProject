@@ -287,8 +287,6 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-
-
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();

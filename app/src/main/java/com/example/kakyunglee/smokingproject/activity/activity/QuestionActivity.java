@@ -29,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -113,6 +115,34 @@ public class QuestionActivity extends AppCompatActivity {
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Pattern pattern = Pattern.compile("^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$");
+                Matcher matcher = pattern.matcher(questionEmail.getText().toString());
+                Toast.makeText(getApplicationContext(),matcher.matches()+"",Toast.LENGTH_SHORT).show();
+                if(!matcher.matches()){
+                    Toast.makeText(getApplicationContext(),"이메일을 정확히 작성해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(questionTitle.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"제목을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(spinner.getSelectedItemPosition() == 0){
+                    Toast.makeText(getApplicationContext(),"항목을 선택해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(questionContent.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"내용을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(questionEmail.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"이메일을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+
                 QuestionDTO questionDto = new QuestionDTO();
                 questionDto.setTitle(questionTitle.getText().toString());
                 questionDto.setReport_category_id(spinner.getSelectedItemPosition());
@@ -120,6 +150,10 @@ public class QuestionActivity extends AppCompatActivity {
                 questionDto.setEmail(questionEmail.getText().toString());
                 if(is!=null) postTotalData(getBytes(is),questionDto);
                 else postTotalData(questionDto);
+
+                // main 화면으로 돌아가기
+                Intent intent =  new Intent(QuestionActivity.this,MainActivity.class);
+                startActivity(intent);
 
             }
         });

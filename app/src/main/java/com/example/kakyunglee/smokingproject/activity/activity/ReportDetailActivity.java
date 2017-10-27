@@ -112,8 +112,14 @@ public class ReportDetailActivity extends AppCompatActivity{
                 reportDetailDTO.setReport_category_id(spinner.getSelectedItemPosition());
                 reportDetailDTO.setContents(editText.getText().toString());
                 reportDetailDTO.setEmail(email.getText().toString());
+
+
+                // main 화면으로 돌아가기
+                Intent intent =  new Intent(ReportDetailActivity.this,MainActivity.class);
+                startActivity(intent);
             }
         });
+        ///////////////////////////////////////////////////////////////
 
     }
 
