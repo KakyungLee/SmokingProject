@@ -54,12 +54,12 @@ public class ReportDetailDTO {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getReport_detail_id() {
+	public int getReport_id() {
 		return report_id;
 	}
-	public void setReport_detail_id(int report_detail_id) {
-		this.report_id = report_detail_id;
+	public void setReport_id(int report_id) {
+		this.report_id = report_id;
 	}
-	
+
 	
 }
