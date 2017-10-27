@@ -71,8 +71,7 @@
         android:layout_height="150dp"
         android:src="@drawable/ic_menu_gallery"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:tint="@color/tempImage"/>
+        android:layout_marginRight="5dp"/>
 
     <TextView
         android:layout_weight="1"

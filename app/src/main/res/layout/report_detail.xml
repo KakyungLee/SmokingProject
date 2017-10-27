@@ -43,8 +43,7 @@
         android:layout_weight="3"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:src="@drawable/ic_menu_gallery"
-        android:tint="@color/tempImage"/>
+        android:src="@drawable/ic_menu_gallery" />
 
     <RelativeLayout
         android:layout_weight="1"
