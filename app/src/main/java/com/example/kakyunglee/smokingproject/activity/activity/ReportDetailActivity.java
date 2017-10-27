@@ -3,6 +3,7 @@ package com.example.kakyunglee.smokingproject.activity.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
@@ -19,11 +20,23 @@ import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.dto.ReportDetailDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.response.ReportDetailResultDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.response.ReportResultDTO;
+import com.example.kakyunglee.smokingproject.activity.serviceinterface.PostReport;
+import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by KakyungLee on 2017-10-08.
@@ -107,11 +120,17 @@ public class ReportDetailActivity extends AppCompatActivity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // yez : retrofit service 생성하여 postService를 제공할 준비를 한다.
+                PostReport postService = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
+                // yez : 입력 받은 것을 추출하여 전송 준비하는 파트
                 ReportDetailDTO reportDetailDTO = new ReportDetailDTO();
                 reportDetailDTO.setReport_category_id(spinner.getSelectedItemPosition());
                 reportDetailDTO.setContents(editText.getText().toString());
                 reportDetailDTO.setEmail(email.getText().toString());
+                // 간편신고로부터 받는 부분
+
+                if(byteArray!=null) postTotalData(byteArray,reportDetailDTO);
+                else postTotalData(reportDetailDTO);
             }
         });
 
@@ -154,7 +173,7 @@ public class ReportDetailActivity extends AppCompatActivity{
                 loadImage.setImageURI(mImageCaptureUir);
                 try {
                     is = getContentResolver().openInputStream(data.getData());
-                    getBytes(is);
+                    byteArray=getBytes(is);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -164,10 +183,9 @@ public class ReportDetailActivity extends AppCompatActivity{
                 break;
         }
     }
-
+// yez : 인풋스트림을 받아 바이트 배열로 반환해주는 메서드
     public byte[] getBytes(InputStream is)  {
         byteBuff = new ByteArrayOutputStream();
-
         int buffSize = 1024;
         byte[] buff = new byte[buffSize];
 
@@ -178,6 +196,49 @@ public class ReportDetailActivity extends AppCompatActivity{
             }
         }catch(IOException e){}
         return byteBuff.toByteArray();
-    } // 이미지를 byte 형태로 변환
+    } // yez : 이미지를 byte 형태로 변환
 
+    // yez : 데이터 전송과 관련된 함수는 overloading 하도록 한다.
+    private void postTotalData(byte[] imageBytes,ReportDetailDTO reportDetailDTO){
+        PostReport postReport=ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
+        String mimeType = requestFile.contentType().toString();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:MM:ss");
+        String formattedDate = formatter.format(new Date());
+
+
+        String newImage = formattedDate+"."+ mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
+
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
+        final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),body);
+
+        new postReportDetailCall().execute(call);
+
+    } // yez :  이미지를 포함했을 때
+    private void postTotalData(ReportDetailDTO reportDetailDTO){
+        PostReport postReport=ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
+        final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),null);
+        new postReportDetailCall().execute(call);
+    }// yez : 이미지가 포함되지 않았을 때
+
+
+    private class postReportDetailCall extends AsyncTask<Call,Void, ReportDetailResultDTO> {
+        @Override
+        protected ReportDetailResultDTO doInBackground(Call ... params){
+            try{
+                Call<ReportResultDTO> call = params[0];
+                Response response = call.execute();
+                return (ReportDetailResultDTO) response.body();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(ReportDetailResultDTO result) {
+            Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
+        }
+
+    }
 }

@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import okhttp3.MediaType;
@@ -118,7 +119,9 @@ public class QuestionActivity extends AppCompatActivity {
                 questionDto.setReport_category_id(spinner.getSelectedItemPosition());
                 questionDto.setContents(questionContent.getText().toString());
                 questionDto.setEmail(questionEmail.getText().toString());
-                if(is!=null) postTotalData(getBytes(is),questionDto);
+                // inputStream에 뭔가 들어온 게 있는 경우
+                if(byteArray!=null) postTotalData(byteArray,questionDto);
+                // 없는 경우 그냥 Dto내 텍스트 데이터만 전송
                 else postTotalData(questionDto);
 
             }
@@ -164,6 +167,7 @@ public class QuestionActivity extends AppCompatActivity {
                // InputStream is = null;
                 try {
                     is = getContentResolver().openInputStream(mImageCaptureUir);
+                    byteArray=getBytes(is);
                     //getBytes(is);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -196,7 +200,12 @@ public class QuestionActivity extends AppCompatActivity {
         PostQuestion postReportService = ServiceRetrofit.getInstance().getRetrofit().create(PostQuestion.class);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
         String mimeType = requestFile.contentType().toString();
-        String newImage = new Date().toString().replaceAll(" ","")+"image." + mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
+        /////////////// 파일명 처리 ///////////////
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:MM:ss");
+        String formattedDate = formatter.format(new Date());
+
+
+        String newImage = formattedDate+"."+ mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
         final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),body);
         new postQuestionCall().execute(call);

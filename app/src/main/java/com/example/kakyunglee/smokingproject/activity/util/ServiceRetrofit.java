@@ -21,7 +21,7 @@ public class ServiceRetrofit {
     private void buildRetrofit(){
         retrofit= new Retrofit.Builder()
                 //서버의 base url 주소 등록
-                .baseUrl("http://223.195.4.68:8080/")
+                .baseUrl("http://13.125.9.186:8080/")
                 //json객체를 converting 해주는 라이브러리를 import 해야한다. build.gradle을 참고한다.
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
