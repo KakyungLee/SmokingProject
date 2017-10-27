@@ -51,14 +51,13 @@ public class QuestionActivity extends AppCompatActivity {
     private Uri mImageCaptureUir;
     private ImageView loadImage;
     private ByteArrayOutputStream byteBuff;
-    private int question_detail_id;
     private byte[] byteArray;
+    InputStream is = null;
 
     //////////////////////////////////////////////
     private EditText questionTitle;
     private EditText questionContent;
     private EditText questionEmail;
-    InputStream is = null;
     private Button postImage;
     private Spinner spinner;
     private ImageButton btnGallery;
@@ -110,16 +109,13 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
 
-        // 스피너에서 선택된 상세 문의 내용 id
-        question_detail_id = spinner.getSelectedItemPosition();
-
         //////////////////////////////////////////
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                QuestionDTO questionDto=new QuestionDTO();
+                QuestionDTO questionDto = new QuestionDTO();
                 questionDto.setTitle(questionTitle.getText().toString());
-                questionDto.setReport_category_id(1);
+                questionDto.setReport_category_id(spinner.getSelectedItemPosition());
                 questionDto.setContents(questionContent.getText().toString());
                 questionDto.setEmail(questionEmail.getText().toString());
                 if(is!=null) postTotalData(getBytes(is),questionDto);

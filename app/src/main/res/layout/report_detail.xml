@@ -17,13 +17,20 @@
         android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="서울특별시 동대문구 답십리 1동 323-18호"
+        android:text="서울특별시 광진구 군자동 209"
         android:layout_above="@+id/report"
         android:layout_margin="-10dp"
         android:textColor="@color/black"
         android:background="@color/mainColor"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"/>
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내용"
+        android:textColor="@color/mainColor"/>
 
 
 
@@ -35,8 +42,9 @@
         android:hint="이곳에 내용을 입력하세요."
         android:gravity="left"
         android:background="@color/white"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="5dp"
+        android:paddingLeft="7dp"/>
 
     <ImageView
         android:id="@+id/load_image"
@@ -44,6 +52,24 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:src="@drawable/ic_menu_gallery" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="E-mail"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/mainColor"/>
+
+    <EditText
+        android:layout_weight="1"
+        android:id="@+id/report_email"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/white"
+        android:inputType="text"
+        android:hint="이메일을 입력하세요"
+        android:paddingLeft="10dp"/>
+
 
     <RelativeLayout
         android:layout_weight="1"
@@ -81,9 +107,9 @@
             android:layout_height="30dp"
             android:text="submit"
             android:layout_alignParentRight="true"
-            android:textColor="@color/mainColor"
+            android:textColor="@color/white"
             android:layout_marginTop="3dp"
-            android:background="@color/white"/>
+            android:background="@color/mainColor"/>
     </RelativeLayout>
 
 </LinearLayout>

@@ -4,8 +4,8 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,14 +28,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
+import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
-import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,16 +56,26 @@ public class MainActivity extends AppCompatActivity
     double currentUserLatitude;
     double currentUserLongitude;
     private GoogleApiClient mGoogleApiClient;
-    boolean no_smoking_clicked = false;
-    boolean smoking_clicked = false;
+
     GoogleMap mGoogleMap;
     DrawerLayout drawer;
     private FusedLocationProviderClient mFusedLocationClient;
     SelectedLocation infoLocation = new SelectedLocation();
     MarkerOptions markerOptions = new MarkerOptions();
 
-    ImageButton fab_no_smoking;
-    ImageButton fab_smoking;
+
+    /////////////////////////////////////
+    private ImageButton fab_no_smoking; // 금연 구역 필터 버튼
+    private ImageButton fab_smoking; //흡연 구역 필터 버튼
+    private Button reportBtn; // 신고하기 버튼
+    private NavigationView navigationView; // 내비게이션 뷰
+
+    ///////////////////////////////////
+    private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
+    private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
+
+    ////////////////////////////////////////
+
     // 움직이는 마커
 
     //위치정보 제공자
@@ -77,7 +86,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //init Api Client
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -92,86 +100,52 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ///////////////////////////////////////
         fab_no_smoking = (ImageButton) findViewById(R.id.none_smoking_area);
+        fab_smoking = (ImageButton) findViewById(R.id.smoking_area);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        reportBtn = (Button)findViewById(R.id.report);
+
+        ////////////////////////////////////////
+
+        // 금연구역 필터 버튼
         fab_no_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(no_smoking_clicked == false){
-
-                    Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
-                    fab_no_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
-                    no_smoking_clicked = true;
-
-                }else{
-                    Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
-                    fab_no_smoking.setBackgroundResource(R.drawable.filter_button);
-                    no_smoking_clicked = false;
-                }
-
+                areaNonSmokingButtonClicked();
             }
         });
 
-        fab_smoking = (ImageButton) findViewById(R.id.smoking_area);
+        // 흡연구역 필터 버튼
         fab_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(smoking_clicked == false){
-
-                    Toast.makeText(getApplicationContext(), "필터 on", Toast.LENGTH_LONG).show();
-                    fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
-
-                    smoking_clicked = true;
-
-                }else{
-                    Toast.makeText(getApplicationContext(), "필터 off", Toast.LENGTH_LONG).show();
-                    fab_smoking.setBackgroundResource(R.drawable.filter_button);
-                    smoking_clicked = false;
-                }
+                areaSmokingButtonClicked();
             }
         });
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // 내비게이션 불러오기
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        // 내비게이션에서 선택된 리스트로 이동
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
             @SuppressWarnings("StatementWithEmptyBody")
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem){
                 // Handle navigation view item clicks here.
-                int id = menuItem.getItemId();
-
-                if (id == R.id.nav_notice) {
-
-                    GetNoticeInfo getNoticeInfo = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
-                    final Call<NoticeListDTO> call=getNoticeInfo.noticeInfo();
-                    new GetNoticeList().execute(call);
-
-
-                } else if (id == R.id.nav_law) {
-                    Intent intent = new Intent(MainActivity.this,LawListActivity.class);
-                    startActivity(intent);
-
-                } else if (id == R.id.nav_question) {
-                    Intent intent = new Intent(MainActivity.this,QuestionActivity.class);
-                    startActivity(intent);
-                } else if(id == R.id.nav_info){
-                    Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
-                    startActivity(intent);
-                }
-
+                int id = menuItem.getItemId();   // 선택된 menu
+                selectedNavigationItem(id);       // 선택된 menu로 이동
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
 
-        Button reportBtn = (Button)findViewById(R.id.report);
+        // 신고하기 버튼
         reportBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -179,14 +153,18 @@ public class MainActivity extends AppCompatActivity
 
                 LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(report_dialog,null);
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
+
+
                 TextView textView = (TextView)view.findViewById(R.id.report_dialog_address);
+                //사용자가 설정한 마커 또는 사용자 위치의 주소 입력 ""
                 textView.setText("서울특별시 광진구 군자동 능동로 209");
+
                 final AlertDialog dialog = builder.create();
                 dialog.show();
 
+                // 신고하지 않을 경우
                 Button noBtn = (Button)view.findViewById(R.id.no);
                 noBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,6 +173,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
+                // 신고할 경우
                 Button yesBtn = (Button)view.findViewById(R.id.yes);
                 yesBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -202,17 +181,21 @@ public class MainActivity extends AppCompatActivity
                         dialog.cancel();
 
                         /// DTO에 위도 경도 넣어주기 & 서버 전송송
-
+                        /*
+                        ReportDTO reportDTO = new ReportDTO();
+                        reportDTO.setLatitude(위도변수);
+                        reportDTO.setLongititude(경도변수);
+                        */
                        //
-
+                        // 두번째 다이얼로그 만들기
                         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                         View view = inflater.inflate(R.layout.report_detail_dialog,null);
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setView(view);
-                        final AlertDialog dialog2 = builder.create();
+                        final AlertDialog  dialog2 = builder.create();
                         dialog2.show();
 
+                        //상세 신고를 하지 않는 경우
                         Button skipBtn = (Button)view.findViewById(R.id.skip);
                         skipBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -221,13 +204,12 @@ public class MainActivity extends AppCompatActivity
                             }
                         });
 
+                        //상세신고를 하는 경우
                         Button writeBtn = (Button)view.findViewById(R.id.write_detail);
                         writeBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                dialog2.cancel();
-                                Intent intent = new Intent(MainActivity.this,ReportDetailActivity.class);
-                                startActivity(intent);
+                                doDetailNotice(dialog2);
                             }
                         });
                     }
@@ -235,6 +217,78 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    // 금연 구역 필터 on off 확인 함수
+    private  void areaNonSmokingButtonClicked(){
+
+        if(no_smoking_clicked == false){
+
+            Toast.makeText(getApplicationContext(), "금연 구역 필터 on", Toast.LENGTH_LONG).show();
+            fab_no_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
+            no_smoking_clicked = true;
+
+        }else{
+            Toast.makeText(getApplicationContext(), "금연 구역 필터 off", Toast.LENGTH_LONG).show();
+            fab_no_smoking.setBackgroundResource(R.drawable.filter_button);
+            no_smoking_clicked = false;
+        }
+        return;
+    }
+
+    // 흡연 구역 필터 on off 확인 함수
+    private void areaSmokingButtonClicked(){
+        if(smoking_clicked == false){
+
+            Toast.makeText(getApplicationContext(), "흡연 구역 필터 on", Toast.LENGTH_LONG).show();
+            fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
+
+            smoking_clicked = true;
+
+        }else{
+            Toast.makeText(getApplicationContext(), "흡연 구역 필터 off", Toast.LENGTH_LONG).show();
+            fab_smoking.setBackgroundResource(R.drawable.filter_button);
+            smoking_clicked = false;
+        }
+        return;
+    }
+
+    //내비게이션에서 선택된 리스트로 이동하는 함수
+    private void selectedNavigationItem(int id){
+        if (id == R.id.nav_notice) { // 공지사항으로 이동
+
+            GetNoticeInfo getNoticeInfo = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
+            final Call<NoticeListDTO> call=getNoticeInfo.noticeInfo();
+            new GetNoticeList().execute(call);
+
+        } else if (id == R.id.nav_law) { //법률 정보로 이동
+            Intent intent = new Intent(MainActivity.this,LawListActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_question) { // 정부 문의로 이동
+            Intent intent = new Intent(MainActivity.this,QuestionActivity.class);
+            startActivity(intent);
+
+        } else if(id == R.id.nav_info){ // 앱 정보로 이동
+            Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    //상세신고를 작성하는 경우 
+    private void doDetailNotice(AlertDialog dialog2){
+        dialog2.cancel();
+        Intent intent = new Intent(MainActivity.this,ReportDetailActivity.class);
+        // 위도 경도 전송
+                                /*
+                                intent.putExtra("latitude",위도변수);
+                                intent.putExtra("longitude",경도변수);
+                                intent.putExtra("address",주소변수);
+                                */
+        startActivity(intent);
+    }
+
+
+
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -349,6 +403,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
     // Permission check
     public Location requestUserLastLocation(){
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -357,6 +412,7 @@ public class MainActivity extends AppCompatActivity
                 mGoogleApiClient);
         return null;
     }
+
     // selected Location renewing
     public void renewPinnedLocation(Location newLocation){
         mGoogleMap.clear();
@@ -367,6 +423,7 @@ public class MainActivity extends AppCompatActivity
         markerOptions.position(target);
         mGoogleMap.addMarker(markerOptions);
     }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Location mLastLocation = requestUserLastLocation();
@@ -376,6 +433,7 @@ public class MainActivity extends AppCompatActivity
         }
         renewPinnedLocation(mLastLocation);
     }
+
     @Override
     public void onConnectionSuspended(int i) {
 

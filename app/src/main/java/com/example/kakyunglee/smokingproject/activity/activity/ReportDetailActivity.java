@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
+import com.example.kakyunglee.smokingproject.activity.dto.ReportDetailDTO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -42,16 +43,27 @@ public class ReportDetailActivity extends AppCompatActivity{
     /////////////////////////////////////////
     private Spinner spinner;
     private ImageView loadImage;
+    private EditText email;
     private ImageButton btnGallery;
     private ImageButton btnCamera;
     private EditText editText;
     private Button button;
     /////////////////////////////////////////
+    private double latitude;
+    private double longitude;
+    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_detail);
+        /*
+        Intent intent = getIntent();
+        latitude = intent.getExtras().getDouble("latitude");
+        longitude = intent.getExtras().getDouble("longitude");
+        address = intent.getExtras().getString("address");
+        */
+
 
         //엑션바 사용자 커스텀 타이틀 설정
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -63,6 +75,7 @@ public class ReportDetailActivity extends AppCompatActivity{
         spinner = (Spinner)findViewById(R.id.report_spinner);
         editText = (EditText) findViewById(R.id.report_detail_content);
         loadImage = (ImageView)findViewById(R.id.load_image) ;
+        email = (EditText)findViewById(R.id.report_email);
         btnGallery = (ImageButton)findViewById(R.id.open_gallery);
         btnCamera = (ImageButton)findViewById(R.id.open_camera);
         button = (Button)findViewById(R.id.submit_report);
@@ -94,7 +107,11 @@ public class ReportDetailActivity extends AppCompatActivity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),spinner.getSelectedItemPosition()+"",Toast.LENGTH_SHORT).show();
+
+                ReportDetailDTO reportDetailDTO = new ReportDetailDTO();
+                reportDetailDTO.setReport_category_id(spinner.getSelectedItemPosition());
+                reportDetailDTO.setContents(editText.getText().toString());
+                reportDetailDTO.setEmail(email.getText().toString());
             }
         });
 
@@ -105,13 +122,13 @@ public class ReportDetailActivity extends AppCompatActivity{
         String url =  MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString();
         intent.putExtra(MediaStore.EXTRA_OUTPUT,url);
         startActivityForResult(intent,PICK_FROM_CAMERA);
-    }
+    }// 카메라 연결 함수
 
     public  void openGallery(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent,PICK_FROM_ALBUM);
-    }
+    }// 갤러리 여는 함수
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -129,7 +146,7 @@ public class ReportDetailActivity extends AppCompatActivity{
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
                     byteArray = stream.toByteArray();
-                }
+                } // 카메라에서 이미지 결과 가져 오는 함수
 
                 break;
             case PICK_FROM_ALBUM :
@@ -142,11 +159,10 @@ public class ReportDetailActivity extends AppCompatActivity{
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                } // 갤러리에서 이미지 가져오는 함수
+
                 break;
         }
-
-
     }
 
     public byte[] getBytes(InputStream is)  {
@@ -162,6 +178,6 @@ public class ReportDetailActivity extends AppCompatActivity{
             }
         }catch(IOException e){}
         return byteBuff.toByteArray();
-    }
+    } // 이미지를 byte 형태로 변환
 
 }
