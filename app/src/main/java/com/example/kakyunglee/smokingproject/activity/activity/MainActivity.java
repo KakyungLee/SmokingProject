@@ -31,9 +31,12 @@ import android.widget.Toast;
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.ReportDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.response.ReportResultDTO;
 import com.example.kakyunglee.smokingproject.activity.dto.response.ReverseGeoCodeResult;
 import com.example.kakyunglee.smokingproject.activity.geointerface.AddressInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
+import com.example.kakyunglee.smokingproject.activity.serviceinterface.PostReport;
 import com.example.kakyunglee.smokingproject.activity.util.GeoRetrofit;
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,7 +51,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -72,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     private ImageButton fab_smoking; //흡연 구역 필터 버튼
     private Button reportBtn; // 신고하기 버튼
     private NavigationView navigationView; // 내비게이션 뷰
+    private TextView tv_address;
     ///////////////////////////////////
     private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
     private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
@@ -108,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         reportBtn = (Button)findViewById(R.id.report);
-
+        tv_address=(TextView)findViewById(R.id.address);
         ////////////////////////////////////////
 
         // 금연구역 필터 버튼
@@ -157,11 +164,23 @@ public class MainActivity extends AppCompatActivity
                 View view = inflater.inflate(report_dialog,null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
+                String fixedAddress=currentAddress;
 
+                //final double fixedLat = infoLocation.getSelectedLocationLatitude();
+                //final double fixedLng = infoLocation.getSelectedLocationLongitude();
+                DecimalFormat formatterLat = new DecimalFormat("##.######");
+                DecimalFormat formatterLng = new DecimalFormat("###.######");
 
+                final String fixedLat= formatterLat.format(infoLocation.getSelectedLocationLatitude());
+                final String fixedLng= formatterLng.format(infoLocation.getSelectedLocationLongitude());
+                /*DecimalFormat formLat = new DecimalFormat("##.######");
+                DecimalFormat formLng = new DecimalFormat("###.######");
+                String fixedLat = formLat.format(infoLocation.getSelectedLocationLatitude());
+                String fixedLng = formLng.format(infoLocation.getSelectedLocationLongitude());
+*/
                 TextView textView = (TextView)view.findViewById(R.id.report_dialog_address);
                 //사용자가 설정한 마커 또는 사용자 위치의 주소 입력 ""
-                textView.setText("서울특별시 광진구 군자동 능동로 209");
+                textView.setText(fixedAddress);
 
                 final AlertDialog dialog = builder.create();
                 dialog.show();
@@ -181,7 +200,13 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
-
+                        PostReport postReport = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
+                        Toast.makeText(MainActivity.this, ""+fixedLat+" / "+fixedLng, Toast.LENGTH_SHORT).show();
+                        Map<String,String> params = new HashMap<String, String>();
+                        params.put("latitude",fixedLat);
+                        params.put("longitude",fixedLng);
+                        Call<ReportResultDTO> call = postReport.postSimpleReport(params);
+                        new NetworkReport().execute(call);
                         /// DTO에 위도 경도 넣어주기 & 서버 전송송
                         /*
                         ReportDTO reportDTO = new ReportDTO();
@@ -190,30 +215,7 @@ public class MainActivity extends AppCompatActivity
                         */
                        //
                         // 두번째 다이얼로그 만들기
-                        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View view = inflater.inflate(R.layout.report_detail_dialog,null);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setView(view);
-                        final AlertDialog  dialog2 = builder.create();
-                        dialog2.show();
 
-                        //상세 신고를 하지 않는 경우
-                        Button skipBtn = (Button)view.findViewById(R.id.skip);
-                        skipBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog2.cancel();
-                            }
-                        });
-
-                        //상세신고를 하는 경우
-                        Button writeBtn = (Button)view.findViewById(R.id.write_detail);
-                        writeBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                doDetailNotice(dialog2);
-                            }
-                        });
                     }
                 });
             }
@@ -278,15 +280,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     //상세신고를 작성하는 경우
-    private void doDetailNotice(AlertDialog dialog2){
+    private void doDetailNotice(
+            AlertDialog dialog2,
+            int reportId,
+            String address) {
         dialog2.cancel();
         Intent intent = new Intent(MainActivity.this,ReportDetailActivity.class);
-        // 위도 경도 전송
-                                /*
-                                intent.putExtra("latitude",위도변수);
-                                intent.putExtra("longitude",경도변수);
-                                intent.putExtra("address",주소변수);
-                                */
+        intent.putExtra("report_id",reportId);
+        intent.putExtra("address",address);
         startActivity(intent);
     }
 
@@ -472,6 +473,7 @@ public class MainActivity extends AppCompatActivity
             try{
                 Call<ReverseGeoCodeResult> call = params[0];
                 Response<ReverseGeoCodeResult> response = call.execute();
+                Log.d("ckh_logging",response.toString());
                 return response.body();
             }catch(IOException e){
                 e.printStackTrace();
@@ -485,7 +487,54 @@ public class MainActivity extends AppCompatActivity
             }else{
             Log.d("ckhlogging",result.getStatus());
             currentAddress=result.getResults().get(0).getFormattedAddress();
+            tv_address.setText(currentAddress);
             Toast.makeText(MainActivity.this,currentAddress,Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private class NetworkReport extends AsyncTask<Call,Void,ReportResultDTO>{
+        @Override
+        protected ReportResultDTO doInBackground(Call... params) {
+            try{
+                Call<ReportResultDTO> call = params[0];
+                Response<ReportResultDTO> response = call.execute();
+                Log.d("ckh_report",response.toString());
+                return response.body();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(ReportResultDTO result){
+            if(result==null){
+                Toast.makeText(MainActivity.this,"간편신고 failed",Toast.LENGTH_SHORT).show();
+            }else{
+                final int reportId = result.getId();
+                LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.report_detail_dialog,null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setView(view);
+                final AlertDialog  dialog2 = builder.create();
+                dialog2.show();
+
+                //상세 신고를 하지 않는 경우
+                Button skipBtn = (Button)view.findViewById(R.id.skip);
+                skipBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog2.cancel();
+                    }
+                });
+
+                //상세신고를 하는 경우
+                Button writeBtn = (Button)view.findViewById(R.id.write_detail);
+                writeBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doDetailNotice(dialog2,reportId,currentAddress);
+                    }
+                });
             }
         }
     }

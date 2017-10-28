@@ -65,22 +65,16 @@ public class ReportDetailActivity extends AppCompatActivity{
     private EditText editText;
     private Button button;
     /////////////////////////////////////////
-    private double latitude;
-    private double longitude;
-    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_detail);
-        /*
+
         Intent intent = getIntent();
-        latitude = intent.getExtras().getDouble("latitude");
-        longitude = intent.getExtras().getDouble("longitude");
-        address = intent.getExtras().getString("address");
-        */
-
-
+        int reportId = intent.getExtras().getInt("report_id");
+        String address = intent.getExtras().getString("address");
+        Toast.makeText(this, reportId +" || 주소: "+address, Toast.LENGTH_SHORT).show();
         //엑션바 사용자 커스텀 타이틀 설정
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_bar);
