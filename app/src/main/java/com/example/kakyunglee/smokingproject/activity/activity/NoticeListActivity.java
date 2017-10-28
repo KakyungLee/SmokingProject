@@ -45,7 +45,7 @@ public class NoticeListActivity extends AppCompatActivity{
         barTitle.setText("공지사항");
 
         // 서버에서 공지사항 리스트 가져오기 & listMenu 입력
-        NoticeListDTO noticeListDto = (NoticeListDTO) this.getIntent().getExtras().get("notice_list");
+        final NoticeListDTO noticeListDto = (NoticeListDTO) this.getIntent().getExtras().get("notice_list");
         for (NoticeDTO notice : noticeListDto.noticeLists) {
             Log.d("test : ",notice.getTitle());
             listMenu.add(notice.getTitle());
@@ -60,9 +60,9 @@ public class NoticeListActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                detail_id = position;
+                detail_id = noticeListDto.noticeLists.size()-position;
                 GetNoticeInfo designerInfoService = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
-                final Call<NoticeDTO> call = designerInfoService.noticeDetailInfo(position+1);
+                final Call<NoticeDTO> call = designerInfoService.noticeDetailInfo(detail_id);
                  new getNoticeDetail().execute(call);
             }
 
