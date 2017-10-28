@@ -2,17 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/notice_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="title"
+            android:textSize="20dp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/notice_created_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2017-12-12"
+            android:gravity="right"/>
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_marginTop="5dp">
 
         <TextView
-            android:id="@+id/notice_detail_content"
+            android:id="@+id/notice_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"/>
+            android:padding="5dp"
+            android:text="이것은 테슽 입니다. "/>
     </ScrollView>
 
 

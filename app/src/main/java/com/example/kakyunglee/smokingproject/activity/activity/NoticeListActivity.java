@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,7 @@ import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNotice
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -28,8 +30,9 @@ import retrofit2.Response;
 
 public class NoticeListActivity extends AppCompatActivity{
 
-    private String[] listMenu={"test1","test2","test3"};
+    private ArrayList<String> listMenu = new ArrayList<String>();
     private int detail_id;
+    private int i=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +44,12 @@ public class NoticeListActivity extends AppCompatActivity{
         TextView barTitle = (TextView)findViewById(R.id.title_bar);
         barTitle.setText("공지사항");
 
-        // 서버에서 공지사항 리스트 가져오기
+        // 서버에서 공지사항 리스트 가져오기 & listMenu 입력
         NoticeListDTO noticeListDto = (NoticeListDTO) this.getIntent().getExtras().get("notice_list");
         for (NoticeDTO notice : noticeListDto.noticeLists) {
-            System.out.println(notice.getTitle());
+            Log.d("test : ",notice.getTitle());
+            listMenu.add(notice.getTitle());
         }
-        // 리스트 내용은 listNeun에 담기
 
         //end 서버에서 공지사항 리스트 가져오기
 
@@ -59,11 +62,8 @@ public class NoticeListActivity extends AppCompatActivity{
 
                 detail_id = position;
                 GetNoticeInfo designerInfoService = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
-                final Call<NoticeDTO> call = designerInfoService.noticeDetailInfo(position);
-                // 이 번호를 입력한다.
-
-
-                new getNoticeDetail().execute(call);
+                final Call<NoticeDTO> call = designerInfoService.noticeDetailInfo(position+1);
+                 new getNoticeDetail().execute(call);
             }
 
         });
