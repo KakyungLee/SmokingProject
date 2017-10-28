@@ -31,11 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-<<<<<<< HEAD
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-=======
->>>>>>> 1363b8e42fb59a246a51e263e95f68ce510ff2cc
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -125,8 +123,6 @@ public class ReportDetailActivity extends AppCompatActivity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-
                 // 입력 정규식
                 if(spinner.getSelectedItemPosition() == 0){
                     Toast.makeText(getApplicationContext(),"항목을 선택해 주세요",Toast.LENGTH_SHORT).show();
@@ -148,8 +144,6 @@ public class ReportDetailActivity extends AppCompatActivity{
                 }
 
 
-=======
->>>>>>> 1363b8e42fb59a246a51e263e95f68ce510ff2cc
                 // yez : retrofit service 생성하여 postService를 제공할 준비를 한다.
                 PostReport postService = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
                 // yez : 입력 받은 것을 추출하여 전송 준비하는 파트
@@ -157,23 +151,16 @@ public class ReportDetailActivity extends AppCompatActivity{
                 reportDetailDTO.setReport_category_id(spinner.getSelectedItemPosition());
                 reportDetailDTO.setContents(editText.getText().toString());
                 reportDetailDTO.setEmail(email.getText().toString());
-<<<<<<< HEAD
-
-=======
->>>>>>> 1363b8e42fb59a246a51e263e95f68ce510ff2cc
                 // 간편신고로부터 받는 부분
 
                 if(byteArray!=null) postTotalData(byteArray,reportDetailDTO);
                 else postTotalData(reportDetailDTO);
-<<<<<<< HEAD
-                
+
                 // main 화면으로 돌아가기
                 Intent intent =  new Intent(ReportDetailActivity.this,MainActivity.class);
                 Toast.makeText(getApplication(),"신고를 완료했습니다",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 
-=======
->>>>>>> 1363b8e42fb59a246a51e263e95f68ce510ff2cc
             }
         });
         ///////////////////////////////////////////////////////////////
@@ -252,13 +239,6 @@ public class ReportDetailActivity extends AppCompatActivity{
 
 
         String newImage = formattedDate+"."+ mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
-<<<<<<< HEAD
-
-
-=======
-
-
->>>>>>> 1363b8e42fb59a246a51e263e95f68ce510ff2cc
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
         final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),body);
 
