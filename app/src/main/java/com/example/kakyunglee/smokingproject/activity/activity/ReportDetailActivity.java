@@ -72,7 +72,7 @@ public class ReportDetailActivity extends AppCompatActivity{
         setContentView(R.layout.report_detail);
 
         Intent intent = getIntent();
-        int reportId = intent.getExtras().getInt("report_id");
+        final int reportId = intent.getExtras().getInt("report_id");
         String address = intent.getExtras().getString("address");
         Toast.makeText(this, reportId +" || 주소: "+address, Toast.LENGTH_SHORT).show();
         //엑션바 사용자 커스텀 타이틀 설정
@@ -145,6 +145,7 @@ public class ReportDetailActivity extends AppCompatActivity{
                 reportDetailDTO.setReport_category_id(spinner.getSelectedItemPosition());
                 reportDetailDTO.setContents(editText.getText().toString());
                 reportDetailDTO.setEmail(email.getText().toString());
+                reportDetailDTO.setReport_id(reportId);
                 // 간편신고로부터 받는 부분
 
                 if(byteArray!=null) postTotalData(byteArray,reportDetailDTO);
@@ -234,14 +235,14 @@ public class ReportDetailActivity extends AppCompatActivity{
 
         String newImage = formattedDate+"."+ mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
-        final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),body);
+        final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),body,reportDetailDTO.getReport_id());
 
         new postReportDetailCall().execute(call);
 
     } // yez :  이미지를 포함했을 때
     private void postTotalData(ReportDetailDTO reportDetailDTO){
         PostReport postReport=ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
-        final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),null);
+        final Call<ReportDetailResultDTO> call = postReport.postDetailReport(reportDetailDTO.getReport_category_id(),reportDetailDTO.getEmail(),reportDetailDTO.getContents(),null,reportDetailDTO.getReport_id());
         new postReportDetailCall().execute(call);
     }// yez : 이미지가 포함되지 않았을 때
 
