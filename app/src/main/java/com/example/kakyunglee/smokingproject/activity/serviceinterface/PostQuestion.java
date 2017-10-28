@@ -15,7 +15,7 @@ import retrofit2.http.Part;
 
 public interface PostQuestion {
     @Multipart
-    @POST("/SmokingServer/service/question")
+    @POST("SmokingServer/service/question")
     Call<QuestionResponseDTO> postQuestion(@Part("title") String title,
                                            @Part("report_category_id") int report_category_id,
                                            @Part("email") String email,

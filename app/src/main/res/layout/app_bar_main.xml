@@ -19,6 +19,7 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:hint="@string/mainactivity_et_search_loc"
+            android:maxLines="1"
            />
         <ImageView
             android:id="@+id/search_button"
