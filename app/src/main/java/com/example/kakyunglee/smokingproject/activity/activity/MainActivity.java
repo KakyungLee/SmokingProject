@@ -81,16 +81,16 @@ public class MainActivity extends AppCompatActivity
         GoogleMap.OnCameraIdleListener {
 
     private GoogleApiClient mGoogleApiClient;
-    String currentAddress="";
+    String currentAddress = "";
     GoogleMap mGoogleMap;
     DrawerLayout drawer;
     private FusedLocationProviderClient mFusedLocationClient;
     SelectedLocation infoLocation = new SelectedLocation();
     MarkerOptions markerOptions = new MarkerOptions();
-    String currentMapCenterLatitude="";
-    String currentMapCenterLongitude="";
-    ArrayList<Marker> markerNonSmokingList=null;
-    ArrayList<Marker> markerSmokingList=null;
+    String currentMapCenterLatitude = "";
+    String currentMapCenterLongitude = "";
+    ArrayList<Marker> markerNonSmokingList = null;
+    ArrayList<Marker> markerSmokingList = null;
     /////////////////////////////////////
     private ImageButton fab_no_smoking; // 금연 구역 필터 버튼
     private ImageButton fab_smoking; //흡연 구역 필터 버튼
@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity
     private EditText et_userAddressInput;
     ImageView btn_search;
     ///////////////////////////////////
-    private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
-    private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
+    private boolean no_smoking_clicked = true; // 금연 구역 필터 버튼 눌림 유지
+    private boolean smoking_clicked = true;  // 흡연 구역 필터 버튼 눌림 유지
 
     ////////////////////////////////////////
 
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         markerNonSmokingList = new ArrayList<>();
         markerSmokingList = new ArrayList<>();
         FragmentManager fragmentManager = getFragmentManager();
-        MapFragment mapFragment = (MapFragment)fragmentManager
+        MapFragment mapFragment = (MapFragment) fragmentManager
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -135,19 +135,19 @@ public class MainActivity extends AppCompatActivity
         fab_smoking = (ImageButton) findViewById(R.id.smoking_area);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        reportBtn = (Button)findViewById(R.id.report);
-        tv_address=(TextView)findViewById(R.id.address);
-        et_userAddressInput=(EditText)findViewById(R.id.et_search_Loc);
-        btn_search = (ImageView)findViewById(R.id.search_button);
+        reportBtn = (Button) findViewById(R.id.report);
+        tv_address = (TextView) findViewById(R.id.address);
+        et_userAddressInput = (EditText) findViewById(R.id.et_search_Loc);
+        btn_search = (ImageView) findViewById(R.id.search_button);
         ////////////////////////////////////////
 
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(MainActivity.this,et_userAddressInput.getText().toString(),Toast.LENGTH_SHORT).show();
-                String userSearchAddress=et_userAddressInput.getText().toString();
+                String userSearchAddress = et_userAddressInput.getText().toString();
                 AddressInfo getLatLng = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
-                Call<GeoCodeResult> callGeoCodeResult= getLatLng.geoResult(userSearchAddress,"ko","AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
+                Call<GeoCodeResult> callGeoCodeResult = getLatLng.geoResult(userSearchAddress, "ko", "AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
                 new NetWorkGeoAddressInfo().execute(callGeoCodeResult);
             }
         });
@@ -174,10 +174,10 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         // 내비게이션에서 선택된 리스트로 이동
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @SuppressWarnings("StatementWithEmptyBody")
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem){
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
                 // Handle navigation view item clicks here.
                 int id = menuItem.getItemId();   // 선택된 menu
                 selectedNavigationItem(id);       // 선택된 menu로 이동
@@ -188,30 +188,30 @@ public class MainActivity extends AppCompatActivity
         });
 
         // 신고하기 버튼
-        reportBtn.setOnClickListener(new View.OnClickListener(){
+        reportBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(report_dialog,null);
+                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(report_dialog, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
-                String fixedAddress=currentAddress;
+                String fixedAddress = currentAddress;
 
                 //final double fixedLat = infoLocation.getSelectedLocationLatitude();
                 //final double fixedLng = infoLocation.getSelectedLocationLongitude();
                 DecimalFormat formatterLat = new DecimalFormat("##.######");
                 DecimalFormat formatterLng = new DecimalFormat("###.######");
 
-                final String fixedLat= formatterLat.format(infoLocation.getSelectedLocationLatitude());
-                final String fixedLng= formatterLng.format(infoLocation.getSelectedLocationLongitude());
+                final String fixedLat = formatterLat.format(infoLocation.getSelectedLocationLatitude());
+                final String fixedLng = formatterLng.format(infoLocation.getSelectedLocationLongitude());
                 /*DecimalFormat formLat = new DecimalFormat("##.######");
                 DecimalFormat formLng = new DecimalFormat("###.######");
                 String fixedLat = formLat.format(infoLocation.getSelectedLocationLatitude());
                 String fixedLng = formLng.format(infoLocation.getSelectedLocationLongitude());
 */
-                TextView textView = (TextView)view.findViewById(R.id.report_dialog_address);
+                TextView textView = (TextView) view.findViewById(R.id.report_dialog_address);
                 //사용자가 설정한 마커 또는 사용자 위치의 주소 입력 ""
                 textView.setText(fixedAddress);
 
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity
                 dialog.show();
 
                 // 신고하지 않을 경우
-                Button noBtn = (Button)view.findViewById(R.id.no);
+                Button noBtn = (Button) view.findViewById(R.id.no);
                 noBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -228,17 +228,17 @@ public class MainActivity extends AppCompatActivity
                 });
 
                 // 신고할 경우
-                Button yesBtn = (Button)view.findViewById(R.id.yes);
+                Button yesBtn = (Button) view.findViewById(R.id.yes);
                 yesBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
                         PostReport postReport = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
-                        Toast.makeText(MainActivity.this, ""+fixedLat+" / "+fixedLng, Toast.LENGTH_SHORT).show();
-                       // Map<String,String> params = new HashMap<String, String>();
-                       // params.put("latitude",fixedLat);
-                      //  params.put("longitude",fixedLng);
-                        Call<ReportResultDTO> call = postReport.postSimpleReport(fixedLat,fixedLng);
+                        Toast.makeText(MainActivity.this, "" + fixedLat + " / " + fixedLng, Toast.LENGTH_SHORT).show();
+                        // Map<String,String> params = new HashMap<String, String>();
+                        // params.put("latitude",fixedLat);
+                        //  params.put("longitude",fixedLng);
+                        Call<ReportResultDTO> call = postReport.postSimpleReport(fixedLat, fixedLng);
                         new NetworkReport().execute(call);
 
                     }
@@ -248,64 +248,68 @@ public class MainActivity extends AppCompatActivity
     }
 
     // 금연 구역 필터 on off 확인 함수
-    private  void areaNonSmokingButtonClicked(){
+    private void areaNonSmokingButtonClicked() {
 
-        if(!no_smoking_clicked){
+        if (!no_smoking_clicked) {
             Toast.makeText(getApplicationContext(), "금연 구역 필터 on", Toast.LENGTH_LONG).show();
             fab_no_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
-            if(markerNonSmokingList!=null)
-                for(int i=0;i<markerNonSmokingList.size();i++) markerNonSmokingList.get(i).setVisible(true);
+            if (markerNonSmokingList != null)
+                for (int i = 0; i < markerNonSmokingList.size(); i++)
+                    markerNonSmokingList.get(i).setVisible(true);
             no_smoking_clicked = true;
 
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(), "금연 구역 필터 off", Toast.LENGTH_LONG).show();
             fab_no_smoking.setBackgroundResource(R.drawable.filter_button);
-            if(markerNonSmokingList!=null)
-                for(int i=0;i<markerNonSmokingList.size();i++) markerNonSmokingList.get(i).setVisible(false);
+            if (markerNonSmokingList != null)
+                for (int i = 0; i < markerNonSmokingList.size(); i++)
+                    markerNonSmokingList.get(i).setVisible(false);
             no_smoking_clicked = false;
         }
         return;
     }
 
     // 흡연 구역 필터 on off 확인 함수
-    private void areaSmokingButtonClicked(){
-        if(!smoking_clicked){
+    private void areaSmokingButtonClicked() {
+        if (!smoking_clicked) {
 
             Toast.makeText(getApplicationContext(), "흡연 구역 필터 on", Toast.LENGTH_LONG).show();
             fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
-            if(markerSmokingList!=null)
-                for(int i=0;i<markerSmokingList.size();i++) markerSmokingList.get(i).setVisible(true);
+            if (markerSmokingList != null)
+                for (int i = 0; i < markerSmokingList.size(); i++)
+                    markerSmokingList.get(i).setVisible(true);
             smoking_clicked = true;
 
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(), "흡연 구역 필터 off", Toast.LENGTH_LONG).show();
             fab_smoking.setBackgroundResource(R.drawable.filter_button);
-            if(markerSmokingList!=null)
-                for(int i=0;i<markerSmokingList.size();i++) markerSmokingList.get(i).setVisible(false);
+            if (markerSmokingList != null)
+                for (int i = 0; i < markerSmokingList.size(); i++)
+                    markerSmokingList.get(i).setVisible(false);
             smoking_clicked = false;
         }
         return;
     }
 
     //내비게이션에서 선택된 리스트로 이동하는 함수
-    private void selectedNavigationItem(int id){
+    private void selectedNavigationItem(int id) {
         if (id == R.id.nav_notice) { // 공지사항으로 이동
 
             GetNoticeInfo getNoticeInfo = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
 
-            final Call<NoticeListDTO> call=getNoticeInfo.noticeInfo();
+            final Call<NoticeListDTO> call = getNoticeInfo.noticeInfo();
             new GetNoticeList().execute(call);
 
         } else if (id == R.id.nav_law) { //법률 정보로 이동
-            Intent intent = new Intent(MainActivity.this,LawListActivity.class);
+            Intent intent = new Intent(MainActivity.this, LawListActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_question) { // 정부 문의로 이동
-            Intent intent = new Intent(MainActivity.this,QuestionActivity.class);
+            Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
             startActivity(intent);
 
-        } else if(id == R.id.nav_info){ // 앱 정보로 이동
-            Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
+        } else if (id == R.id.nav_info) { // 앱 정보로 이동
+            Intent intent = new Intent(MainActivity.this, AppInfoActivity.class);
             startActivity(intent);
         }
     }
@@ -316,9 +320,9 @@ public class MainActivity extends AppCompatActivity
             int reportId,
             String address) {
         dialog2.cancel();
-        Intent intent = new Intent(MainActivity.this,ReportDetailActivity.class);
-        intent.putExtra("report_id",reportId);
-        intent.putExtra("address",address);
+        Intent intent = new Intent(MainActivity.this, ReportDetailActivity.class);
+        intent.putExtra("report_id", reportId);
+        intent.putExtra("address", address);
         startActivity(intent);
     }
 
@@ -365,23 +369,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     ////////////////////// retrofit 삽입 : NoticeList/////////////////////////
-    private class GetNoticeList extends AsyncTask<Call,Void, NoticeListDTO> {
+    private class GetNoticeList extends AsyncTask<Call, Void, NoticeListDTO> {
         @Override
-        protected NoticeListDTO doInBackground(Call ... params){
-            try{
+        protected NoticeListDTO doInBackground(Call... params) {
+            try {
                 Call<NoticeListDTO> call = params[0];
                 Response<NoticeListDTO> response = call.execute();
                 return response.body();
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(NoticeListDTO result) {
-            Bundle extras=new Bundle();
-            extras.putSerializable("notice_list",result);
-            Intent intent = new Intent(MainActivity.this,NoticeListActivity.class);
+            Bundle extras = new Bundle();
+            extras.putSerializable("notice_list", result);
+            Intent intent = new Intent(MainActivity.this, NoticeListActivity.class);
             intent.putExtras(extras);
             startActivity(intent);
         }
@@ -391,7 +396,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        mGoogleMap.setMinZoomPreference(17.0f);
+        mGoogleMap.setMinZoomPreference(14.0f);
         mGoogleMap.setMaxZoomPreference(21.0f);
         //markerOptions.position(new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude()));
 
@@ -401,12 +406,12 @@ public class MainActivity extends AppCompatActivity
         mGoogleMap.setOnCameraMoveCanceledListener(this);
 
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
+        if (userLocPermissionCheck == PackageManager.PERMISSION_DENIED) {
             //다이얼로그 -> 퍼미션 non
             //default 서울시청 위치
             //Snackbar -> 퍼미션 허용 하시겠습니까?
             // 네트워크 작업이기 때문에 asyncTask 필요?
-        }else{
+        } else {
             mGoogleMap.setMyLocationEnabled(true);
             /*LatLng userLocation = new LatLng(37.566673, 126.978412);
             markerOptions.position(userLocation);
@@ -417,14 +422,14 @@ public class MainActivity extends AppCompatActivity
         mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                renewPinnedLocation(null,latLng);
+                renewPinnedLocation(null, latLng);
             }
         });
         mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
                 Location mLastLocation = requestUserLastLocation();
-                renewPinnedLocation(mLastLocation,null);
+                renewPinnedLocation(mLastLocation, null);
                 return false;
             }
         });
@@ -434,16 +439,13 @@ public class MainActivity extends AppCompatActivity
     public void onCameraMoveStarted(int reason) {
 
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            Toast.makeText(this, "The user gestured on the map.",
-                    Toast.LENGTH_SHORT).show();
+            Log.d("camera_user gestured" ,"The user gestured on the map.");
         } else if (reason == GoogleMap.OnCameraMoveStartedListener
                 .REASON_API_ANIMATION) {
-            /*Toast.makeText(this, "The user tapped something on the map.",
-                    Toast.LENGTH_SHORT).show();*/
+
         } else if (reason == GoogleMap.OnCameraMoveStartedListener
                 .REASON_DEVELOPER_ANIMATION) {
-            /*Toast.makeText(this, "The app moved the camera.",
-                    Toast.LENGTH_SHORT).show();*/
+
         }
     }
 
@@ -459,61 +461,45 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCameraIdle() {
-        //mGoogleMap.clear();
-        /*if(markerNonSmokingList!=null){
-            for(int i=0; i<markerNonSmokingList.size();i++){
-                markerNonSmokingList.get(i).remove();
-            }
-
-        }*/
-
-        //카메라 멈춘경우 요청
 
         DecimalFormat formatterLat = new DecimalFormat("##.######");
         DecimalFormat formatterLng = new DecimalFormat("###.######");
         currentMapCenterLatitude = formatterLat.format(mGoogleMap.getCameraPosition().target.latitude);
         currentMapCenterLongitude = formatterLng.format(mGoogleMap.getCameraPosition().target.longitude);
 
-        /* 중앙값 테스트
-        Toast.makeText(this, "The camera has stopped moving. "+mGoogleMap.getCameraPosition().target.latitude+","+mGoogleMap.getCameraPosition().target.longitude ,
-                Toast.LENGTH_SHORT).show();
-        LatLng tmp = new LatLng(mGoogleMap.getCameraPosition().target.latitude,mGoogleMap.getCameraPosition().target.longitude);
-        markerOptions.position(tmp);
-        mGoogleMap.addMarker(markerOptions);*/
-        //mGoogleMap.getCameraPosition().target.latitude
         NonSmokingArea nonSmokingArea = ServiceRetrofit.getInstance().getRetrofit().create(NonSmokingArea.class);
-        Call<List<AreaNoneSmokingDTO>> callNonSmokingArea = nonSmokingArea.getNonSmokingArea(currentMapCenterLatitude,currentMapCenterLongitude);
+        Call<List<AreaNoneSmokingDTO>> callNonSmokingArea = nonSmokingArea.getNonSmokingArea(currentMapCenterLatitude, currentMapCenterLongitude);
         new NetworkNonSmoking().execute(callNonSmokingArea);
 
         SmokingArea smokingArea = ServiceRetrofit.getInstance().getRetrofit().create(SmokingArea.class);
-        Call<List<AreaSmokingDTO>> callSmokingArea = smokingArea.getSmokingArea(currentMapCenterLatitude,currentMapCenterLongitude);
+        Call<List<AreaSmokingDTO>> callSmokingArea = smokingArea.getSmokingArea(currentMapCenterLatitude, currentMapCenterLongitude);
         new NetworkSmoking().execute(callSmokingArea);
     }
 
     // Permission check
-    public Location requestUserLastLocation(){
+    public Location requestUserLastLocation() {
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if(userLocPermissionCheck != PackageManager.PERMISSION_DENIED)
+        if (userLocPermissionCheck != PackageManager.PERMISSION_DENIED)
             return LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+                    mGoogleApiClient);
         return null;
     }
 
     // selected Location renewing
-    public void renewPinnedLocation(Location newLocation, LatLng newLatlng){
+    public void renewPinnedLocation(Location newLocation, LatLng newLatlng) {
         int selectedLogin = 0;
         final int LOCATION_FLAG = 0;
         final int LATLNG_FLAG = 1;
         String refinedLatLng = "";
 
-        if(newLocation == null && newLatlng == null){
-            Toast.makeText(MainActivity.this, "위치정보 가져오기 에러",Toast.LENGTH_SHORT).show();
+        if (newLocation == null && newLatlng == null) {
+            Log.d("ckh_null","위치정보 가져오기 에러");
             return;
         }
-        if(newLatlng !=null) selectedLogin = 1;
+        if (newLatlng != null) selectedLogin = 1;
         //set pin Login
         mGoogleMap.clear();
-        switch(selectedLogin) {
+        switch (selectedLogin) {
             case LOCATION_FLAG:
                 infoLocation.setSelectedLocationLatitude(newLocation.getLatitude());
                 infoLocation.setSelectedLocationLongitude(newLocation.getLongitude());
@@ -534,14 +520,14 @@ public class MainActivity extends AppCompatActivity
         }
         DecimalFormat formLat = new DecimalFormat("##.######");
         DecimalFormat formLng = new DecimalFormat("###.######");
-        refinedLatLng=formLat.format(infoLocation.getSelectedLocationLatitude()) + "," + formLng.format(infoLocation.getSelectedLocationLongitude());
+        refinedLatLng = formLat.format(infoLocation.getSelectedLocationLatitude()) + "," + formLng.format(infoLocation.getSelectedLocationLongitude());
         Toast.makeText(
                 MainActivity.this,
                 refinedLatLng,
                 Toast.LENGTH_SHORT
         ).show();
         AddressInfo getAddress = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
-        Call<GeoCodeResult> callReverseGeoCodeResult = getAddress.reverseGeoResult(refinedLatLng,"ko","AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
+        Call<GeoCodeResult> callReverseGeoCodeResult = getAddress.reverseGeoResult(refinedLatLng, "ko", "AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
         new NetWorkGeoInfo().execute(callReverseGeoCodeResult);
         //get address
     }
@@ -549,7 +535,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Location mLastLocation = requestUserLastLocation();
-        renewPinnedLocation(mLastLocation,null);
+        renewPinnedLocation(mLastLocation, null);
     }
 
     @Override
@@ -559,36 +545,37 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e("api client error",connectionResult.getErrorMessage());
+        Log.e("api client error", connectionResult.getErrorMessage());
     }
 
-    private class NetWorkGeoInfo extends AsyncTask<Call,Void,GeoCodeResult>{
+    private class NetWorkGeoInfo extends AsyncTask<Call, Void, GeoCodeResult> {
 
         @Override
         protected GeoCodeResult doInBackground(Call... params) {
-            try{
+            try {
                 Call<GeoCodeResult> call = params[0];
                 Response<GeoCodeResult> response = call.execute();
-                Log.d("ckh_logging",response.toString());
                 return response.body();
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
-        protected void onPostExecute(GeoCodeResult result){
-            if(result==null){
-                Toast.makeText(MainActivity.this,"요청 failed",Toast.LENGTH_SHORT).show();
-            }else{
-            Log.d("ckhlogging",result.getStatus());
-            currentAddress=result.getResults().get(0).getFormattedAddress();
-            tv_address.setText(currentAddress);
-            Toast.makeText(MainActivity.this,currentAddress,Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(GeoCodeResult result) {
+            if (result == null) {
+                Log.d("network_reverse_geo","요청 failed");
+            } else {
+                Log.d("ckhlogging", result.getStatus());
+                currentAddress = result.getResults().get(0).getFormattedAddress();
+                tv_address.setText(currentAddress);
+                Toast.makeText(MainActivity.this, currentAddress, Toast.LENGTH_SHORT).show();
             }
         }
     }
-    private class NetWorkGeoAddressInfo extends AsyncTask<Call,Void,GeoCodeResult> {
+
+    private class NetWorkGeoAddressInfo extends AsyncTask<Call, Void, GeoCodeResult> {
 
         @Override
         protected GeoCodeResult doInBackground(Call... params) {
@@ -606,7 +593,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(GeoCodeResult result) {
             if (result == null || result.getResults() == null) {
-                Toast.makeText(MainActivity.this, "요청 failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "주소를 다시 입력해 주세요.", Toast.LENGTH_SHORT).show();
             } else {
                 Log.d("ckhlogging", result.getStatus());
                 if (!result.getStatus().equals("ZERO_RESULTS")) {
@@ -639,34 +626,36 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-    private class NetworkReport extends AsyncTask<Call,Void,ReportResultDTO>{
+
+    private class NetworkReport extends AsyncTask<Call, Void, ReportResultDTO> {
         @Override
         protected ReportResultDTO doInBackground(Call... params) {
-            try{
+            try {
                 Call<ReportResultDTO> call = params[0];
                 Response<ReportResultDTO> response = call.execute();
-                Log.d("ckh_report",response.toString());
+                Log.d("ckh_report", response.toString());
                 return response.body();
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
-        protected void onPostExecute(ReportResultDTO result){
-            if(result==null){
-                Toast.makeText(MainActivity.this,"간편신고 failed",Toast.LENGTH_SHORT).show();
-            }else{
+        protected void onPostExecute(ReportResultDTO result) {
+            if (result == null) {
+                Log.d("network_simple_report", "간편신고 failed");
+            } else {
                 final int reportId = result.getId();
-                LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.report_detail_dialog,null);
+                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.report_detail_dialog, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
-                final AlertDialog  dialog2 = builder.create();
+                final AlertDialog dialog2 = builder.create();
                 dialog2.show();
 
                 //상세 신고를 하지 않는 경우
-                Button skipBtn = (Button)view.findViewById(R.id.skip);
+                Button skipBtn = (Button) view.findViewById(R.id.skip);
                 skipBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -675,42 +664,45 @@ public class MainActivity extends AppCompatActivity
                 });
 
                 //상세신고를 하는 경우
-                Button writeBtn = (Button)view.findViewById(R.id.write_detail);
+                Button writeBtn = (Button) view.findViewById(R.id.write_detail);
                 writeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        doDetailNotice(dialog2,reportId,currentAddress);
+                        doDetailNotice(dialog2, reportId, currentAddress);
                     }
                 });
             }
         }
     }
-    private class NetworkNonSmoking extends AsyncTask<Call,Void, List<AreaNoneSmokingDTO>>{
+
+    private class NetworkNonSmoking extends AsyncTask<Call, Void, List<AreaNoneSmokingDTO>> {
         @Override
-        protected  List<AreaNoneSmokingDTO> doInBackground(Call... params) {
-            try{
+        protected List<AreaNoneSmokingDTO> doInBackground(Call... params) {
+            try {
                 Call<List<AreaNoneSmokingDTO>> call = params[0];
                 Response<List<AreaNoneSmokingDTO>> response = call.execute();
-                Log.d("ckh_report",response.toString());
+                Log.d("ckh_report", response.toString());
                 return response.body();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+
         @Override
-        protected void onPostExecute(List<AreaNoneSmokingDTO> result){
-            if(result==null){
-                Toast.makeText(MainActivity.this,"금연 쿼리 failed",Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(MainActivity.this,"금연 쿼리 success",Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(List<AreaNoneSmokingDTO> result) {
+            if (result == null) {
+
+                Log.d("network_NonSmoking","금연구역 쿼리 failed");
+            } else {
+                Log.d("network_NonSmoking","금연구역 쿼리 success");
 
             }
             Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.custom_pin_non_smoking);
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 96, 96, false);
 
-            if(result!=null) {
+            if (result != null) {
                 for (int i = 0; i < result.size(); i++) {
                     AreaNoneSmokingDTO area = result.get(i);
                     MarkerOptions markerOptions = new MarkerOptions()
@@ -719,15 +711,16 @@ public class MainActivity extends AppCompatActivity
                             .snippet("범위 :" + area.getRange())
                             .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
 
-                    if (no_smoking_clicked && checkDuplicateArea(markerNonSmokingList, markerOptions))
+                    if (no_smoking_clicked && checkDuplicateArea(markerNonSmokingList, markerOptions)) {
                         markerNonSmokingList.add(mGoogleMap.addMarker(markerOptions));
+                    }
                 }
             }
+
         }
 
     }
-
-    private class NetworkSmoking extends AsyncTask<Call,Void, List<AreaSmokingDTO>> {
+    private class NetworkSmoking extends AsyncTask<Call, Void, List<AreaSmokingDTO>> {
         @Override
         protected List<AreaSmokingDTO> doInBackground(Call... params) {
             try {
@@ -744,15 +737,15 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<AreaSmokingDTO> result) {
             if (result == null) {
-                Toast.makeText(MainActivity.this, "흡연 쿼리 failed", Toast.LENGTH_SHORT).show();
+                Log.d("network_Smoking","흡연구역 쿼리 failed");
             } else {
-                Toast.makeText(MainActivity.this, "흡연 쿼리 success", Toast.LENGTH_SHORT).show();
+                Log.d("network_Smoking","흡연구역 쿼리 success");
 
             }
             Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.custom_pin_smoking);
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 96, 96, false);
-            if(result!=null) {
+            if (result != null) {
                 for (int i = 0; i < result.size(); i++) {
                     AreaSmokingDTO area = result.get(i);
                     MarkerOptions markerOptions = new MarkerOptions()
@@ -767,10 +760,11 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-    boolean checkDuplicateArea(ArrayList<Marker> markerList, MarkerOptions markerOptions){
-        if(markerList==null) return true;
-        for (int i=0;i<markerList.size();i++){
-            if(markerList.get(i).getTitle().equals(markerOptions.getTitle())) return false;
+
+    boolean checkDuplicateArea(ArrayList<Marker> markerList, MarkerOptions markerOptions) {
+        if (markerList == null) return true;
+        for (int i = 0; i < markerList.size(); i++) {
+            if (markerList.get(i).getTitle().equals(markerOptions.getTitle())) return false;
         }
         return true;
     }

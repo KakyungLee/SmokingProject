@@ -27,7 +27,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/search_button">
-
         </ImageView>
 
     </android.support.v7.widget.Toolbar>
@@ -91,7 +90,4 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"/>
-
-
-
 </RelativeLayout>
