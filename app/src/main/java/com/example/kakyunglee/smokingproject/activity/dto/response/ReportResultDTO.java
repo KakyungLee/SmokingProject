@@ -12,6 +12,7 @@ public class ReportResultDTO implements Serializable{
     public int getId(){
         return id;
     }
+    public int getCount(){return count;}
     @Override
     public String toString() {
         return "ReportResultDTO{" +
