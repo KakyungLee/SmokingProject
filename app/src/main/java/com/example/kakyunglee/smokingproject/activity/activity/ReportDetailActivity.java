@@ -64,6 +64,7 @@ public class ReportDetailActivity extends AppCompatActivity{
     private ImageButton btnCamera;
     private EditText editText;
     private Button button;
+    private TextView reportAddress;
     /////////////////////////////////////////
 
     @Override
@@ -74,7 +75,7 @@ public class ReportDetailActivity extends AppCompatActivity{
         Intent intent = getIntent();
         final int reportId = intent.getExtras().getInt("report_id");
         String address = intent.getExtras().getString("address");
-        Toast.makeText(this, reportId +" || 주소: "+address, Toast.LENGTH_SHORT).show();
+
         //엑션바 사용자 커스텀 타이틀 설정
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_bar);
@@ -89,6 +90,11 @@ public class ReportDetailActivity extends AppCompatActivity{
         btnGallery = (ImageButton)findViewById(R.id.open_gallery);
         btnCamera = (ImageButton)findViewById(R.id.open_camera);
         button = (Button)findViewById(R.id.submit_report);
+        reportAddress = (TextView)findViewById(R.id.address);
+
+        // 주소 설정
+        reportAddress.setText(address);
+
 
         // 스피너 어댑터
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.report_detail,android.R.layout.simple_spinner_dropdown_item);
