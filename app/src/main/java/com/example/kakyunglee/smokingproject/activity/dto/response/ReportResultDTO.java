@@ -7,8 +7,16 @@ import java.io.Serializable;
  */
 
 public class ReportResultDTO implements Serializable{
-    int id;
+    private int id;
+    private int count;
     public int getId(){
-     return id;
+        return id;
+    }
+    @Override
+    public String toString() {
+        return "ReportResultDTO{" +
+                "id=" + id +
+                ", count=" + count +
+                '}';
     }
 }
