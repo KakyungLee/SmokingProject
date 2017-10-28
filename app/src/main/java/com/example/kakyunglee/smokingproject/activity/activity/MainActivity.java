@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //상세신고를 작성하는 경우 
+    //상세신고를 작성하는 경우
     private void doDetailNotice(AlertDialog dialog2){
         dialog2.cancel();
         Intent intent = new Intent(MainActivity.this,ReportDetailActivity.class);
@@ -289,8 +289,6 @@ public class MainActivity extends AppCompatActivity
                                 */
         startActivity(intent);
     }
-
-
 
     protected void onStart() {
         mGoogleApiClient.connect();

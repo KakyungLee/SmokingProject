@@ -28,7 +28,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -113,13 +116,46 @@ public class QuestionActivity extends AppCompatActivity {
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(spinner.getSelectedItemPosition() == 0){
+                    Toast.makeText(getApplicationContext(),"항목을 선택해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(questionTitle.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"제목을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(questionContent.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"내용을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(questionEmail.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"이메일을 입력해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+[@][a-zA-Z0-9]+[\\.][a-zA-Z0-9]+$");
+                Matcher matcher = pattern.matcher(questionEmail.getText().toString());
+                if(!matcher.matches()){
+                    Toast.makeText(getApplicationContext(),"이메일을 정확히 작성해 주세요",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 QuestionDTO questionDto = new QuestionDTO();
                 questionDto.setTitle(questionTitle.getText().toString());
                 questionDto.setReport_category_id(spinner.getSelectedItemPosition());
                 questionDto.setContents(questionContent.getText().toString());
                 questionDto.setEmail(questionEmail.getText().toString());
-                if(is!=null) postTotalData(getBytes(is),questionDto);
+                // inputStream에 뭔가 들어온 게 있는 경우
+                if(byteArray!=null) postTotalData(byteArray,questionDto);
+                // 없는 경우 그냥 Dto내 텍스트 데이터만 전송
                 else postTotalData(questionDto);
+
+                // main 화면으로 돌아가기
+                Intent intent =  new Intent(QuestionActivity.this,MainActivity.class);
+                Toast.makeText(getApplication(),"문의를 완료했습니다",Toast.LENGTH_SHORT).show();
+                startActivity(intent);
 
             }
         });
@@ -164,6 +200,7 @@ public class QuestionActivity extends AppCompatActivity {
                // InputStream is = null;
                 try {
                     is = getContentResolver().openInputStream(mImageCaptureUir);
+                    byteArray=getBytes(is);
                     //getBytes(is);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -196,7 +233,12 @@ public class QuestionActivity extends AppCompatActivity {
         PostQuestion postReportService = ServiceRetrofit.getInstance().getRetrofit().create(PostQuestion.class);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageBytes);
         String mimeType = requestFile.contentType().toString();
-        String newImage = new Date().toString().replaceAll(" ","")+"image." + mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
+        /////////////// 파일명 처리 ///////////////
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:MM:ss");
+        String formattedDate = formatter.format(new Date());
+
+
+        String newImage = formattedDate+"."+ mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
         final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),body);
         new postQuestionCall().execute(call);
