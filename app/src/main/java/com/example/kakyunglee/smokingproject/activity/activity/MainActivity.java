@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -33,8 +32,8 @@ import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
 import com.example.kakyunglee.smokingproject.activity.dto.response.AddressComponent;
-import com.example.kakyunglee.smokingproject.activity.dto.response.ReportResultDTO;
 import com.example.kakyunglee.smokingproject.activity.dto.response.GeoCodeResult;
+import com.example.kakyunglee.smokingproject.activity.dto.response.ReportResultDTO;
 import com.example.kakyunglee.smokingproject.activity.geointerface.AddressInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.PostReport;
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity
     private TextView tv_address;
     private EditText et_userAddressInput;
     ImageView btn_search;
+    private TextView reportDialogCount;
     ///////////////////////////////////
     private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
     private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setTitle("");
 
         //init Api Client
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity
         tv_address=(TextView)findViewById(R.id.address);
         et_userAddressInput=(EditText)findViewById(R.id.et_search_Loc);
         btn_search = (ImageView)findViewById(R.id.search_button);
+        reportDialogCount = (TextView) findViewById(R.id.report_count);
         ////////////////////////////////////////
 
         btn_search.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +206,9 @@ public class MainActivity extends AppCompatActivity
                 //사용자가 설정한 마커 또는 사용자 위치의 주소 입력 ""
                 textView.setText(fixedAddress);
 
+
+
+
                 final AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -228,7 +234,6 @@ public class MainActivity extends AppCompatActivity
                         params.put("longitude",fixedLng);
                         Call<ReportResultDTO> call = postReport.postSimpleReport(params);
                         new NetworkReport().execute(call);
-
                     }
                 });
             }
@@ -293,10 +298,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //상세신고를 작성하는 경우
-    private void doDetailNotice(
-            AlertDialog dialog2,
-            int reportId,
-            String address) {
+    private void doDetailNotice(AlertDialog dialog2, int reportId, String address){
         dialog2.cancel();
         Intent intent = new Intent(MainActivity.this,ReportDetailActivity.class);
         intent.putExtra("report_id",reportId);
@@ -324,27 +326,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     ////////////////////// retrofit 삽입 : NoticeList/////////////////////////
     private class GetNoticeList extends AsyncTask<Call,Void, NoticeListDTO> {
@@ -613,8 +594,12 @@ public class MainActivity extends AppCompatActivity
                 final int reportId = result.getId();
                 LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.report_detail_dialog,null);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
+
+                //// 신고 횟수 입력 하는 곳
+
                 final AlertDialog  dialog2 = builder.create();
                 dialog2.show();
 
