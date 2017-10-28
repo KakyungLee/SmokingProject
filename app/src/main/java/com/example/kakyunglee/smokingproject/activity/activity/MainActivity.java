@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity
     private TextView tv_address;
     private EditText et_userAddressInput;
     ImageView btn_search;
-    TextView reportDialogCount;
     ///////////////////////////////////
     private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
     private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity
         tv_address=(TextView)findViewById(R.id.address);
         et_userAddressInput=(EditText)findViewById(R.id.et_search_Loc);
         btn_search = (ImageView)findViewById(R.id.search_button);
-        reportDialogCount = (TextView) findViewById(R.id.report_count);
         ////////////////////////////////////////
 
         btn_search.setOnClickListener(new View.OnClickListener() {
@@ -216,9 +214,6 @@ public class MainActivity extends AppCompatActivity
                 //사용자가 설정한 마커 또는 사용자 위치의 주소 입력 ""
                 textView.setText(fixedAddress);
 
-
-
-
                 final AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -239,6 +234,7 @@ public class MainActivity extends AppCompatActivity
                         dialog.cancel();
                         PostReport postReport = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
                         Toast.makeText(MainActivity.this, ""+fixedLat+" / "+fixedLng, Toast.LENGTH_SHORT).show();
+
                        // Map<String,String> params = new HashMap<String, String>();
                        // params.put("latitude",fixedLat);
                       //  params.put("longitude",fixedLng);
@@ -642,6 +638,8 @@ public class MainActivity extends AppCompatActivity
                 final int reportId = result.getId();
                 LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.report_detail_dialog,null);
+                TextView count = (TextView) view.findViewById(R.id.report_count);
+                count.setText(result.getCount()+"");
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
 
@@ -672,6 +670,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
     private class NetworkNonSmoking extends AsyncTask<Call,Void, List<AreaNoneSmokingDTO>>{
         @Override
         protected  List<AreaNoneSmokingDTO> doInBackground(Call... params) {
