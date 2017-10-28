@@ -1,11 +1,35 @@
 package com.example.kakyunglee.smokingproject.activity.dto.response;
 
 import java.io.Serializable;
+import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by chakh on 2017-10-26.
- */
+public class ReverseGeoCodeResult implements Serializable
+{
 
-public class ReverseGeoCodeResult implements Serializable {
+    @SerializedName("results")
+    @Expose
+    private List<Result> results = null;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    private final static long serialVersionUID = 3542721613031790570L;
+
+    public List<Result> getResults() {
+        return results;
+    }
+
+    public void setResults(List<Result> results) {
+        this.results = results;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 }

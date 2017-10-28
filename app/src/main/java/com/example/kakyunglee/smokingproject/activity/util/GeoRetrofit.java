@@ -10,7 +10,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GeoRetrofit {
     private static GeoRetrofit instance = new GeoRetrofit();
     private Retrofit retrofit;
-    final String serverURI = "https://maps.googleapis.com/maps/api/geocode/json";
+    final String serverURI = "https://maps.googleapis.com/";
+    private GeoRetrofit(){
+        buildRetrofit();
+    }
+
     private void buildRetrofit(){
         retrofit = new Retrofit.Builder()
                 .baseUrl(serverURI)

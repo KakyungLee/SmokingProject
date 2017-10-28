@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +31,10 @@ import android.widget.Toast;
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.response.ReverseGeoCodeResult;
+import com.example.kakyunglee.smokingproject.activity.geointerface.AddressInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
+import com.example.kakyunglee.smokingproject.activity.util.GeoRetrofit;
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +48,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -53,10 +58,8 @@ import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    double currentUserLatitude;
-    double currentUserLongitude;
     private GoogleApiClient mGoogleApiClient;
-
+    String currentAddress="";
     GoogleMap mGoogleMap;
     DrawerLayout drawer;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -69,7 +72,6 @@ public class MainActivity extends AppCompatActivity
     private ImageButton fab_smoking; //흡연 구역 필터 버튼
     private Button reportBtn; // 신고하기 버튼
     private NavigationView navigationView; // 내비게이션 뷰
-
     ///////////////////////////////////
     private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
     private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
@@ -257,6 +259,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_notice) { // 공지사항으로 이동
 
             GetNoticeInfo getNoticeInfo = ServiceRetrofit.getInstance().getRetrofit().create(GetNoticeInfo.class);
+
             final Call<NoticeListDTO> call=getNoticeInfo.noticeInfo();
             new GetNoticeList().execute(call);
 
@@ -359,7 +362,7 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setMinZoomPreference(17.0f);
-        mGoogleMap.setMaxZoomPreference(19.0f);
+        mGoogleMap.setMaxZoomPreference(21.0f);
         //markerOptions.position(new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude()));
 
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -369,36 +372,24 @@ public class MainActivity extends AppCompatActivity
             //Snackbar -> 퍼미션 허용 하시겠습니까?
             // 네트워크 작업이기 때문에 asyncTask 필요?
         }else{
-
+            mGoogleMap.setMyLocationEnabled(true);
             /*LatLng userLocation = new LatLng(37.566673, 126.978412);
             markerOptions.position(userLocation);
             googleMap.addMarker(markerOptions);*/
 
         }
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-        mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                LatLng targetLocation= latLng;
-                mGoogleMap.clear();
-                infoLocation.setSelectedLocationLatitude(latLng.latitude);
-                infoLocation.setSelectedLocationLongitude(latLng.longitude);
-                markerOptions.position(targetLocation);
-                mGoogleMap.addMarker(markerOptions);
-                Toast.makeText(MainActivity.this,targetLocation.toString(),Toast.LENGTH_SHORT).show();
-                //요청
+                renewPinnedLocation(null,latLng);
             }
         });
         mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
                 Location mLastLocation = requestUserLastLocation();
-                if (mLastLocation == null) {
-                    Toast.makeText(MainActivity.this,"위치정보를 불러 올 수 없습니다.", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                renewPinnedLocation(mLastLocation);
+                renewPinnedLocation(mLastLocation,null);
                 return false;
             }
         });
@@ -414,24 +405,56 @@ public class MainActivity extends AppCompatActivity
     }
 
     // selected Location renewing
-    public void renewPinnedLocation(Location newLocation){
+    public void renewPinnedLocation(Location newLocation, LatLng newLatlng){
+        int selectedLogin = 0;
+        final int LOCATION_FLAG = 0;
+        final int LATLNG_FLAG = 1;
+        String refinedLatLng = "";
+
+        if(newLocation == null && newLatlng == null){
+            Toast.makeText(MainActivity.this, "위치정보 가져오기 에러",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(newLatlng !=null) selectedLogin = 1;
+        //set pin Login
         mGoogleMap.clear();
-        infoLocation.setSelectedLocationLatitude(newLocation.getLatitude());
-        infoLocation.setSelectedLocationLongitude(newLocation.getLongitude());
-        LatLng target = new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude());
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
-        markerOptions.position(target);
-        mGoogleMap.addMarker(markerOptions);
+        switch(selectedLogin) {
+            case LOCATION_FLAG:
+                infoLocation.setSelectedLocationLatitude(newLocation.getLatitude());
+                infoLocation.setSelectedLocationLongitude(newLocation.getLongitude());
+                LatLng target = new LatLng(infoLocation.getSelectedLocationLatitude(), infoLocation.getSelectedLocationLongitude());
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+                markerOptions.position(target);
+                mGoogleMap.addMarker(markerOptions);
+                break;
+            case LATLNG_FLAG:
+                infoLocation.setSelectedLocationLatitude(newLatlng.latitude);
+                infoLocation.setSelectedLocationLongitude(newLatlng.longitude);
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(newLatlng));
+                markerOptions.position(newLatlng);
+                mGoogleMap.addMarker(markerOptions);
+                break;
+            default:
+                break;
+        }
+        DecimalFormat formLat = new DecimalFormat("##.######");
+        DecimalFormat formLng = new DecimalFormat("###.######");
+        refinedLatLng=formLat.format(infoLocation.getSelectedLocationLatitude()) + "," + formLng.format(infoLocation.getSelectedLocationLongitude());
+        Toast.makeText(
+                MainActivity.this,
+                refinedLatLng,
+                Toast.LENGTH_SHORT
+        ).show();
+        AddressInfo getAddress = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
+        Call<ReverseGeoCodeResult> callGeoCodeResult = getAddress.reverseGeoResult(refinedLatLng,"ko","AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
+        new NetWorkGeoInfo().execute(callGeoCodeResult);
+        //get address
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Location mLastLocation = requestUserLastLocation();
-        if (mLastLocation == null) {
-            Toast.makeText(MainActivity.this,"위치정보를 불러 올 수 없습니다.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        renewPinnedLocation(mLastLocation);
+        renewPinnedLocation(mLastLocation,null);
     }
 
     @Override
@@ -442,5 +465,30 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("api client error",connectionResult.getErrorMessage());
+    }
+
+    private class NetWorkGeoInfo extends AsyncTask<Call,Void,ReverseGeoCodeResult>{
+
+        @Override
+        protected ReverseGeoCodeResult doInBackground(Call... params) {
+            try{
+                Call<ReverseGeoCodeResult> call = params[0];
+                Response<ReverseGeoCodeResult> response = call.execute();
+                return response.body();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(ReverseGeoCodeResult result){
+            if(result==null){
+                Toast.makeText(MainActivity.this,"요청 failed",Toast.LENGTH_SHORT).show();
+            }else{
+            Log.d("ckhlogging",result.getStatus());
+            currentAddress=result.getResults().get(0).getFormattedAddress();
+            Toast.makeText(MainActivity.this,currentAddress,Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
