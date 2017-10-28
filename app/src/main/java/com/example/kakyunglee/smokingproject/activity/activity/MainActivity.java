@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
     private TextView tv_address;
     private EditText et_userAddressInput;
     ImageView btn_search;
-    private TextView reportDialogCount;
+    TextView reportDialogCount;
     ///////////////////////////////////
     private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
     private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
@@ -589,14 +589,18 @@ public class MainActivity extends AppCompatActivity
             if(result==null){
                 Toast.makeText(MainActivity.this,"간편신고 failed",Toast.LENGTH_SHORT).show();
             }else{
+
+                Log.d("test",result.getCount()+"");
+
                 final int reportId = result.getId();
                 LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.report_detail_dialog,null);
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
 
                 //// 신고 횟수 입력 하는 곳
+
+
 
                 final AlertDialog  dialog2 = builder.create();
                 dialog2.show();
