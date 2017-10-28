@@ -52,9 +52,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -229,10 +227,10 @@ public class MainActivity extends AppCompatActivity
                         dialog.cancel();
                         PostReport postReport = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
                         Toast.makeText(MainActivity.this, ""+fixedLat+" / "+fixedLng, Toast.LENGTH_SHORT).show();
-                        Map<String,String> params = new HashMap<String, String>();
-                        params.put("latitude",fixedLat);
-                        params.put("longitude",fixedLng);
-                        Call<ReportResultDTO> call = postReport.postSimpleReport(params);
+                       // Map<String,String> params = new HashMap<String, String>();
+                       // params.put("latitude",fixedLat);
+                      //  params.put("longitude",fixedLng);
+                        Call<ReportResultDTO> call = postReport.postSimpleReport(fixedLat,fixedLng);
                         new NetworkReport().execute(call);
                     }
                 });
