@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,16 +23,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
-import com.example.kakyunglee.smokingproject.activity.dto.ReportDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.response.AddressComponent;
 import com.example.kakyunglee.smokingproject.activity.dto.response.ReportResultDTO;
-import com.example.kakyunglee.smokingproject.activity.dto.response.ReverseGeoCodeResult;
+import com.example.kakyunglee.smokingproject.activity.dto.response.GeoCodeResult;
 import com.example.kakyunglee.smokingproject.activity.geointerface.AddressInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.PostReport;
@@ -51,9 +52,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     private Button reportBtn; // 신고하기 버튼
     private NavigationView navigationView; // 내비게이션 뷰
     private TextView tv_address;
+    private EditText et_userAddressInput;
+    ImageView btn_search;
     ///////////////////////////////////
     private boolean no_smoking_clicked = false; // 금연 구역 필터 버튼 눌림 유지
     private boolean smoking_clicked = false;  // 흡연 구역 필터 버튼 눌림 유지
@@ -122,8 +125,20 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         reportBtn = (Button)findViewById(R.id.report);
         tv_address=(TextView)findViewById(R.id.address);
+        et_userAddressInput=(EditText)findViewById(R.id.et_search_Loc);
+        btn_search = (ImageView)findViewById(R.id.search_button);
         ////////////////////////////////////////
 
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(MainActivity.this,et_userAddressInput.getText().toString(),Toast.LENGTH_SHORT).show();
+                String userSearchAddress=et_userAddressInput.getText().toString();
+                AddressInfo getLatLng = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
+                Call<GeoCodeResult> callGeoCodeResult= getLatLng.geoResult(userSearchAddress,"ko","AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
+                new NetWorkGeoAddressInfo().execute(callGeoCodeResult);
+            }
+        });
         // 금연구역 필터 버튼
         fab_no_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -396,8 +411,8 @@ public class MainActivity extends AppCompatActivity
     public void onCameraMoveStarted(int reason) {
 
         if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-            /*Toast.makeText(this, "The user gestured on the map.",
-                    Toast.LENGTH_SHORT).show();*/
+            Toast.makeText(this, "The user gestured on the map.",
+                    Toast.LENGTH_SHORT).show();
         } else if (reason == GoogleMap.OnCameraMoveStartedListener
                 .REASON_API_ANIMATION) {
             /*Toast.makeText(this, "The user tapped something on the map.",
@@ -480,8 +495,8 @@ public class MainActivity extends AppCompatActivity
                 Toast.LENGTH_SHORT
         ).show();
         AddressInfo getAddress = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
-        Call<ReverseGeoCodeResult> callGeoCodeResult = getAddress.reverseGeoResult(refinedLatLng,"ko","AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
-        new NetWorkGeoInfo().execute(callGeoCodeResult);
+        Call<GeoCodeResult> callReverseGeoCodeResult = getAddress.reverseGeoResult(refinedLatLng,"ko","AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
+        new NetWorkGeoInfo().execute(callReverseGeoCodeResult);
         //get address
     }
 
@@ -501,13 +516,13 @@ public class MainActivity extends AppCompatActivity
         Log.e("api client error",connectionResult.getErrorMessage());
     }
 
-    private class NetWorkGeoInfo extends AsyncTask<Call,Void,ReverseGeoCodeResult>{
+    private class NetWorkGeoInfo extends AsyncTask<Call,Void,GeoCodeResult>{
 
         @Override
-        protected ReverseGeoCodeResult doInBackground(Call... params) {
+        protected GeoCodeResult doInBackground(Call... params) {
             try{
-                Call<ReverseGeoCodeResult> call = params[0];
-                Response<ReverseGeoCodeResult> response = call.execute();
+                Call<GeoCodeResult> call = params[0];
+                Response<GeoCodeResult> response = call.execute();
                 Log.d("ckh_logging",response.toString());
                 return response.body();
             }catch(IOException e){
@@ -516,7 +531,7 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
         @Override
-        protected void onPostExecute(ReverseGeoCodeResult result){
+        protected void onPostExecute(GeoCodeResult result){
             if(result==null){
                 Toast.makeText(MainActivity.this,"요청 failed",Toast.LENGTH_SHORT).show();
             }else{
@@ -524,6 +539,56 @@ public class MainActivity extends AppCompatActivity
             currentAddress=result.getResults().get(0).getFormattedAddress();
             tv_address.setText(currentAddress);
             Toast.makeText(MainActivity.this,currentAddress,Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private class NetWorkGeoAddressInfo extends AsyncTask<Call,Void,GeoCodeResult>{
+
+        @Override
+        protected GeoCodeResult doInBackground(Call... params) {
+            try{
+                Call<GeoCodeResult> call = params[0];
+                Response<GeoCodeResult> response = call.execute();
+                Log.d("ckh_logging",response.toString());
+                return response.body();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(GeoCodeResult result){
+            if(result==null){
+                Toast.makeText(MainActivity.this,"요청 failed",Toast.LENGTH_SHORT).show();
+            }else{
+                Log.d("ckhlogging",result.getStatus());
+                if(result.getStatus()=="ZERO_RESULTS") {
+                    return;
+                }
+                boolean flag = false;
+                //서울이 아닌경우
+                List<AddressComponent> refined = result.getResults().get(0).getAddressComponents();
+                for(int i=0;i<refined.size();i++){
+                    if(refined.get(i).getLongName().equals("서울특별시")){
+                        flag=true;
+                    }
+                }
+                if(!flag) {
+                    Toast.makeText(MainActivity.this, "유효한 주소가 아닙니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //성공 케이스
+                currentAddress=result.getResults().get(0).getFormattedAddress();
+
+                result.getResults().get(0).getGeometry().getLocation().getLat();
+                result.getResults().get(0).getGeometry().getLocation().getLng();
+                renewPinnedLocation(
+                        null,
+                        new LatLng(
+                                result.getResults().get(0).getGeometry().getLocation().getLat(),
+                                result.getResults().get(0).getGeometry().getLocation().getLng()
+                        )
+                );
             }
         }
     }
