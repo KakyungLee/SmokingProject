@@ -16,10 +16,17 @@
         app:popupTheme="@style/AppTheme.PopupOverlay">
         <EditText
             android:id="@+id/et_search_Loc"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:hint="@string/mainactivity_et_search_loc"
-            android:textColor="@color/mainColor"/>
+           />
+        <ImageView
+            android:id="@+id/search_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/search_button">
+
+        </ImageView>
 
     </android.support.v7.widget.Toolbar>
 
@@ -67,9 +74,9 @@
         android:layout_marginLeft="-10dp"
         android:layout_marginRight="-10dp"
         android:paddingLeft="10dp"
+        android:gravity="center"
         android:layout_above="@+id/report"
-        android:layout_alignParentStart="true"
-        android:gravity="center"/>
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/report"
@@ -82,5 +89,7 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"/>
+
+
 
 </RelativeLayout>
