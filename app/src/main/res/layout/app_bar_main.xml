@@ -90,4 +90,8 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"/>
+<<<<<<< HEAD
+=======
+
+>>>>>>> f477e487d6864e67b6da79c0ffcd3340dd895d2c
 </RelativeLayout>

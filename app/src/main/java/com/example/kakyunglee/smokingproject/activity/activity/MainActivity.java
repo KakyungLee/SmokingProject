@@ -21,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -55,7 +54,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -63,7 +61,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -113,6 +110,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setTitle("");
 
         //init Api Client
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -235,12 +234,8 @@ public class MainActivity extends AppCompatActivity
                         dialog.cancel();
                         PostReport postReport = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
                         Toast.makeText(MainActivity.this, "" + fixedLat + " / " + fixedLng, Toast.LENGTH_SHORT).show();
-                        // Map<String,String> params = new HashMap<String, String>();
-                        // params.put("latitude",fixedLat);
-                        //  params.put("longitude",fixedLng);
                         Call<ReportResultDTO> call = postReport.postSimpleReport(fixedLat, fixedLng);
                         new NetworkReport().execute(call);
-
                     }
                 });
             }
@@ -315,10 +310,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //상세신고를 작성하는 경우
-    private void doDetailNotice(
-            AlertDialog dialog2,
-            int reportId,
-            String address) {
+    private void doDetailNotice(AlertDialog dialog2, int reportId, String address){
         dialog2.cancel();
         Intent intent = new Intent(MainActivity.this, ReportDetailActivity.class);
         intent.putExtra("report_id", reportId);
@@ -346,27 +338,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     ////////////////////// retrofit 삽입 : NoticeList/////////////////////////
     private class GetNoticeList extends AsyncTask<Call, Void, NoticeListDTO> {
@@ -642,16 +613,25 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(ReportResultDTO result) {
-            if (result == null) {
-                Log.d("network_simple_report", "간편신고 failed");
-            } else {
+
+        protected void onPostExecute(ReportResultDTO result){
+            if(result==null){
+                Toast.makeText(MainActivity.this,"간편신고 failed",Toast.LENGTH_SHORT).show();
+            }else{
+
+                Log.d("test",result.getCount()+"");
+
                 final int reportId = result.getId();
-                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.report_detail_dialog, null);
+                LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.report_detail_dialog,null);
+                TextView count = (TextView) view.findViewById(R.id.report_count);
+                count.setText(result.getCount()+"");
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
-                final AlertDialog dialog2 = builder.create();
+
+                //// 신고 횟수 입력 하는 곳
+
+                final AlertDialog  dialog2 = builder.create();
                 dialog2.show();
 
                 //상세 신고를 하지 않는 경우
@@ -674,7 +654,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
     private class NetworkNonSmoking extends AsyncTask<Call, Void, List<AreaNoneSmokingDTO>> {
         @Override
         protected List<AreaNoneSmokingDTO> doInBackground(Call... params) {
