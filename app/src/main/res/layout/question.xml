@@ -10,9 +10,11 @@
         android:id="@+id/question_spinner"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:backgroundTint="@color/lightMain"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/mainColor"/>
 
     <TextView
         android:layout_weight="1"
@@ -21,8 +23,10 @@
         android:layout_height="wrap_content"
         android:text="제목"
         android:textColor="@color/mainColor"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="15dp"/>
 
     <EditText
         android:layout_weight="1"
@@ -32,8 +36,8 @@
         android:layout_below="@+id/question_title"
         android:hint="제목을 입력하세요"
         android:background="@color/white"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:paddingLeft="5dp"
         android:maxLines="1"
         android:inputType="text"/>
@@ -46,8 +50,9 @@
         android:text="내용"
         android:textColor="@color/mainColor"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="15dp"/>
 
         <EditText
             android:layout_weight="2"
@@ -58,11 +63,12 @@
             android:gravity="left"
             android:hint="내용을 입력하세요"
             android:background="@color/white"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:paddingLeft="5dp"
             android:maxLines="8"
-            android:inputType="textMultiLine"/>
+            android:inputType="textMultiLine"
+            android:padding="5dp"/>
 
     <ImageView
         android:layout_weight="2"
@@ -70,8 +76,10 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:src="@drawable/ic_menu_gallery"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:layout_weight="1"
@@ -80,9 +88,10 @@
         android:layout_height="wrap_content"
         android:text="E-mail"
         android:textColor="@color/mainColor"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="15dp"/>
 
 
 
@@ -94,17 +103,18 @@
         android:layout_below="@id/question_email"
         android:hint="답변 받을 이메일 주소를 입력하세요"
         android:background="@color/white"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:paddingLeft="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="5dp"
         android:maxLines="1"
         android:inputType="text"/>
 
     <RelativeLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="40dp"
+        android:background="@color/mainColor"
+        android:layout_marginTop="5dp">
 
         <ImageButton
             android:id="@+id/open_gallery_question"
@@ -112,9 +122,9 @@
             android:layout_height="30dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_gallery"
-            android:background="@color/white"
+            android:background="@color/mainColor"
             android:layout_marginLeft="10dp"
-            android:tint="@color/mainColor"
+            android:tint="@color/white"
             android:layout_marginTop="5dp"/>
 
         <ImageButton
@@ -124,9 +134,9 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_camera"
             android:layout_toRightOf="@+id/open_gallery_question"
-            android:background="@color/white"
+            android:background="@color/mainColor"
             android:layout_marginLeft="10dp"
-            android:tint="@color/mainColor"
+            android:tint="@color/white"
             android:layout_marginTop="5dp"/>
 
         <Button

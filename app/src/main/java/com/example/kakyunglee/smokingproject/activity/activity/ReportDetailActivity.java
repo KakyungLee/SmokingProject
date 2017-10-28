@@ -163,6 +163,7 @@ public class ReportDetailActivity extends AppCompatActivity{
                 Intent intent =  new Intent(ReportDetailActivity.this,MainActivity.class);
                 Toast.makeText(getApplication(),"신고를 완료했습니다",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
+                finish();
 
             }
         });

@@ -156,6 +156,7 @@ public class QuestionActivity extends AppCompatActivity {
                 Intent intent =  new Intent(QuestionActivity.this,MainActivity.class);
                 Toast.makeText(getApplication(),"문의를 완료했습니다",Toast.LENGTH_SHORT).show();
                 startActivity(intent);
+                finish();
 
             }
         });
