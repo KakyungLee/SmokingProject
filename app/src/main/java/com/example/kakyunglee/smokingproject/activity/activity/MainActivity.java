@@ -62,7 +62,13 @@ import retrofit2.Response;
 import static com.example.kakyunglee.smokingproject.R.layout.report_dialog;
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnCameraMoveStartedListener,
+        GoogleMap.OnCameraMoveListener,
+        GoogleMap.OnCameraMoveCanceledListener,
+        GoogleMap.OnCameraIdleListener {
 
     private GoogleApiClient mGoogleApiClient;
     String currentAddress="";
@@ -207,14 +213,6 @@ public class MainActivity extends AppCompatActivity
                         params.put("longitude",fixedLng);
                         Call<ReportResultDTO> call = postReport.postSimpleReport(params);
                         new NetworkReport().execute(call);
-                        /// DTO에 위도 경도 넣어주기 & 서버 전송송
-                        /*
-                        ReportDTO reportDTO = new ReportDTO();
-                        reportDTO.setLatitude(위도변수);
-                        reportDTO.setLongititude(경도변수);
-                        */
-                       //
-                        // 두번째 다이얼로그 만들기
 
                     }
                 });
@@ -392,6 +390,43 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            /*Toast.makeText(this, "The user gestured on the map.",
+                    Toast.LENGTH_SHORT).show();*/
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_API_ANIMATION) {
+            /*Toast.makeText(this, "The user tapped something on the map.",
+                    Toast.LENGTH_SHORT).show();*/
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_DEVELOPER_ANIMATION) {
+            /*Toast.makeText(this, "The app moved the camera.",
+                    Toast.LENGTH_SHORT).show();*/
+        }
+    }
+
+    @Override
+    public void onCameraMove() {
+        Toast.makeText(this, "The camera is moving.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+        Toast.makeText(this, "Camera movement canceled.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCameraIdle() {
+        //카메라 멈춘경우 요청
+
+        Toast.makeText(this, "The camera has stopped moving.",
+                Toast.LENGTH_SHORT).show();
     }
 
     // Permission check
