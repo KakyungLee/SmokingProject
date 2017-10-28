@@ -8,12 +8,33 @@
     tools:context="com.example.kakyunglee.smokingproject.activity.activity.MainActivity">
 
     <android.support.v7.widget.Toolbar
+<<<<<<< HEAD
          android:id="@+id/toolbar"
          android:layout_width="match_parent"
          android:layout_height="?attr/actionBarSize"
          android:background="@color/white"
          android:foregroundTint="@color/mainColor"
          app:popupTheme="@style/AppTheme.PopupOverlay">
+=======
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:foregroundTint="@color/mainColor"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+        <EditText
+            android:id="@+id/et_search_Loc"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:hint="@string/mainactivity_et_search_loc"
+            android:maxLines="1"
+           />
+        <ImageView
+            android:id="@+id/search_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/search_button">
+>>>>>>> c8132180e3c0c98c5a48cf3bf2ff3df090bc5da9
 
          <EditText
              android:id="@+id/et_search_Loc"

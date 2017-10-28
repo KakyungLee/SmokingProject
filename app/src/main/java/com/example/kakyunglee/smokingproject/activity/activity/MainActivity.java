@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,13 +32,17 @@ import android.widget.Toast;
 
 import com.example.kakyunglee.smokingproject.R;
 import com.example.kakyunglee.smokingproject.activity.activity.model.SelectedLocation;
+import com.example.kakyunglee.smokingproject.activity.dto.AreaNoneSmokingDTO;
+import com.example.kakyunglee.smokingproject.activity.dto.AreaSmokingDTO;
 import com.example.kakyunglee.smokingproject.activity.dto.NoticeListDTO;
 import com.example.kakyunglee.smokingproject.activity.dto.response.AddressComponent;
 import com.example.kakyunglee.smokingproject.activity.dto.response.GeoCodeResult;
 import com.example.kakyunglee.smokingproject.activity.dto.response.ReportResultDTO;
 import com.example.kakyunglee.smokingproject.activity.geointerface.AddressInfo;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.GetNoticeInfo;
+import com.example.kakyunglee.smokingproject.activity.serviceinterface.NonSmokingArea;
 import com.example.kakyunglee.smokingproject.activity.serviceinterface.PostReport;
+import com.example.kakyunglee.smokingproject.activity.serviceinterface.SmokingArea;
 import com.example.kakyunglee.smokingproject.activity.util.GeoRetrofit;
 import com.example.kakyunglee.smokingproject.activity.util.ServiceRetrofit;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,11 +53,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -75,8 +84,10 @@ public class MainActivity extends AppCompatActivity
     private FusedLocationProviderClient mFusedLocationClient;
     SelectedLocation infoLocation = new SelectedLocation();
     MarkerOptions markerOptions = new MarkerOptions();
-
-
+    String currentMapCenterLatitude="";
+    String currentMapCenterLongitude="";
+    ArrayList<Marker> markerNonSmokingList=null;
+    ArrayList<Marker> markerSmokingList=null;
     /////////////////////////////////////
     private ImageButton fab_no_smoking; // 금연 구역 필터 버튼
     private ImageButton fab_smoking; //흡연 구역 필터 버튼
@@ -109,7 +120,8 @@ public class MainActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
+        markerNonSmokingList = new ArrayList<>();
+        markerSmokingList = new ArrayList<>();
         FragmentManager fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment)fragmentManager
                 .findFragmentById(R.id.map);
@@ -241,15 +253,18 @@ public class MainActivity extends AppCompatActivity
     // 금연 구역 필터 on off 확인 함수
     private  void areaNonSmokingButtonClicked(){
 
-        if(no_smoking_clicked == false){
-
+        if(!no_smoking_clicked){
             Toast.makeText(getApplicationContext(), "금연 구역 필터 on", Toast.LENGTH_LONG).show();
             fab_no_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
+            if(markerNonSmokingList!=null)
+                for(int i=0;i<markerNonSmokingList.size();i++) markerNonSmokingList.get(i).setVisible(true);
             no_smoking_clicked = true;
 
         }else{
             Toast.makeText(getApplicationContext(), "금연 구역 필터 off", Toast.LENGTH_LONG).show();
             fab_no_smoking.setBackgroundResource(R.drawable.filter_button);
+            if(markerNonSmokingList!=null)
+                for(int i=0;i<markerNonSmokingList.size();i++) markerNonSmokingList.get(i).setVisible(false);
             no_smoking_clicked = false;
         }
         return;
@@ -257,16 +272,19 @@ public class MainActivity extends AppCompatActivity
 
     // 흡연 구역 필터 on off 확인 함수
     private void areaSmokingButtonClicked(){
-        if(smoking_clicked == false){
+        if(!smoking_clicked){
 
             Toast.makeText(getApplicationContext(), "흡연 구역 필터 on", Toast.LENGTH_LONG).show();
             fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
-
+            if(markerSmokingList!=null)
+                for(int i=0;i<markerSmokingList.size();i++) markerSmokingList.get(i).setVisible(true);
             smoking_clicked = true;
 
         }else{
             Toast.makeText(getApplicationContext(), "흡연 구역 필터 off", Toast.LENGTH_LONG).show();
             fab_smoking.setBackgroundResource(R.drawable.filter_button);
+            if(markerSmokingList!=null)
+                for(int i=0;i<markerSmokingList.size();i++) markerSmokingList.get(i).setVisible(false);
             smoking_clicked = false;
         }
         return;
@@ -356,6 +374,11 @@ public class MainActivity extends AppCompatActivity
         mGoogleMap.setMaxZoomPreference(21.0f);
         //markerOptions.position(new LatLng(infoLocation.getSelectedLocationLatitude(),infoLocation.getSelectedLocationLongitude()));
 
+        mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnCameraMoveStartedListener(this);
+        mGoogleMap.setOnCameraMoveListener(this);
+        mGoogleMap.setOnCameraMoveCanceledListener(this);
+
         int userLocPermissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if(userLocPermissionCheck== PackageManager.PERMISSION_DENIED){
             //다이얼로그 -> 퍼미션 non
@@ -405,22 +428,45 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCameraMove() {
-        Toast.makeText(this, "The camera is moving.",
-                Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onCameraMoveCanceled() {
-        Toast.makeText(this, "Camera movement canceled.",
-                Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onCameraIdle() {
+        //mGoogleMap.clear();
+        /*if(markerNonSmokingList!=null){
+            for(int i=0; i<markerNonSmokingList.size();i++){
+                markerNonSmokingList.get(i).remove();
+            }
+
+        }*/
+
         //카메라 멈춘경우 요청
 
-        Toast.makeText(this, "The camera has stopped moving.",
+        DecimalFormat formatterLat = new DecimalFormat("##.######");
+        DecimalFormat formatterLng = new DecimalFormat("###.######");
+        currentMapCenterLatitude = formatterLat.format(mGoogleMap.getCameraPosition().target.latitude);
+        currentMapCenterLongitude = formatterLng.format(mGoogleMap.getCameraPosition().target.longitude);
+
+        /* 중앙값 테스트
+        Toast.makeText(this, "The camera has stopped moving. "+mGoogleMap.getCameraPosition().target.latitude+","+mGoogleMap.getCameraPosition().target.longitude ,
                 Toast.LENGTH_SHORT).show();
+        LatLng tmp = new LatLng(mGoogleMap.getCameraPosition().target.latitude,mGoogleMap.getCameraPosition().target.longitude);
+        markerOptions.position(tmp);
+        mGoogleMap.addMarker(markerOptions);*/
+        //mGoogleMap.getCameraPosition().target.latitude
+        NonSmokingArea nonSmokingArea = ServiceRetrofit.getInstance().getRetrofit().create(NonSmokingArea.class);
+        Call<List<AreaNoneSmokingDTO>> callNonSmokingArea = nonSmokingArea.getNonSmokingArea(currentMapCenterLatitude,currentMapCenterLongitude);
+        new NetworkNonSmoking().execute(callNonSmokingArea);
+
+        SmokingArea smokingArea = ServiceRetrofit.getInstance().getRetrofit().create(SmokingArea.class);
+        Call<List<AreaSmokingDTO>> callSmokingArea = smokingArea.getSmokingArea(currentMapCenterLatitude,currentMapCenterLongitude);
+        new NetworkSmoking().execute(callSmokingArea);
     }
 
     // Permission check
@@ -521,53 +567,54 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-    private class NetWorkGeoAddressInfo extends AsyncTask<Call,Void,GeoCodeResult>{
+    private class NetWorkGeoAddressInfo extends AsyncTask<Call,Void,GeoCodeResult> {
 
         @Override
         protected GeoCodeResult doInBackground(Call... params) {
-            try{
+            try {
                 Call<GeoCodeResult> call = params[0];
                 Response<GeoCodeResult> response = call.execute();
-                Log.d("ckh_logging",response.toString());
+                Log.d("ckh_logging", response.toString());
                 return response.body();
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
-        @Override
-        protected void onPostExecute(GeoCodeResult result){
-            if(result==null){
-                Toast.makeText(MainActivity.this,"요청 failed",Toast.LENGTH_SHORT).show();
-            }else{
-                Log.d("ckhlogging",result.getStatus());
-                if(result.getStatus()=="ZERO_RESULTS") {
-                    return;
-                }
-                boolean flag = false;
-                //서울이 아닌경우
-                List<AddressComponent> refined = result.getResults().get(0).getAddressComponents();
-                for(int i=0;i<refined.size();i++){
-                    if(refined.get(i).getLongName().equals("서울특별시")){
-                        flag=true;
-                    }
-                }
-                if(!flag) {
-                    Toast.makeText(MainActivity.this, "유효한 주소가 아닙니다.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //성공 케이스
-                currentAddress=result.getResults().get(0).getFormattedAddress();
 
-                result.getResults().get(0).getGeometry().getLocation().getLat();
-                result.getResults().get(0).getGeometry().getLocation().getLng();
-                renewPinnedLocation(
-                        null,
-                        new LatLng(
-                                result.getResults().get(0).getGeometry().getLocation().getLat(),
-                                result.getResults().get(0).getGeometry().getLocation().getLng()
-                        )
-                );
+        @Override
+        protected void onPostExecute(GeoCodeResult result) {
+            if (result == null || result.getResults() == null) {
+                Toast.makeText(MainActivity.this, "요청 failed", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("ckhlogging", result.getStatus());
+                if (!result.getStatus().equals("ZERO_RESULTS")) {
+                    boolean flag = false;
+                    //서울이 아닌경우
+                    List<AddressComponent> refined = result.getResults().get(0).getAddressComponents();
+                    for (int i = 0; i < refined.size(); i++) {
+                        if (refined.get(i).getLongName().equals("서울특별시")) {
+                            flag = true;
+                        }
+                    }
+                    if (!flag) {
+                        Toast.makeText(MainActivity.this, "유효한 주소가 아닙니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    //성공 케이스
+                    currentAddress = result.getResults().get(0).getFormattedAddress();
+
+                    result.getResults().get(0).getGeometry().getLocation().getLat();
+                    result.getResults().get(0).getGeometry().getLocation().getLng();
+                    renewPinnedLocation(
+                            null,
+                            new LatLng(
+                                    result.getResults().get(0).getGeometry().getLocation().getLat(),
+                                    result.getResults().get(0).getGeometry().getLocation().getLng()
+                            )
+                    );
+                } else
+                    Toast.makeText(MainActivity.this, "유효한 주소가 아닙니다.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -624,5 +671,94 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         }
+    }
+    private class NetworkNonSmoking extends AsyncTask<Call,Void, List<AreaNoneSmokingDTO>>{
+        @Override
+        protected  List<AreaNoneSmokingDTO> doInBackground(Call... params) {
+            try{
+                Call<List<AreaNoneSmokingDTO>> call = params[0];
+                Response<List<AreaNoneSmokingDTO>> response = call.execute();
+                Log.d("ckh_report",response.toString());
+                return response.body();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(List<AreaNoneSmokingDTO> result){
+            if(result==null){
+                Toast.makeText(MainActivity.this,"금연 쿼리 failed",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(MainActivity.this,"금연 쿼리 success",Toast.LENGTH_SHORT).show();
+
+            }
+            Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.custom_pin_non_smoking);
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 96, 96, false);
+
+            if(result!=null) {
+                for (int i = 0; i < result.size(); i++) {
+                    AreaNoneSmokingDTO area = result.get(i);
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(area.getLatitude()), Double.parseDouble(area.getLongitude())))
+                            .title(area.getName())
+                            .snippet("범위 :" + area.getRange())
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+
+                    if (no_smoking_clicked && checkDuplicateArea(markerNonSmokingList, markerOptions))
+                        markerNonSmokingList.add(mGoogleMap.addMarker(markerOptions));
+                }
+            }
+        }
+
+    }
+
+    private class NetworkSmoking extends AsyncTask<Call,Void, List<AreaSmokingDTO>> {
+        @Override
+        protected List<AreaSmokingDTO> doInBackground(Call... params) {
+            try {
+                Call<List<AreaSmokingDTO>> call = params[0];
+                Response<List<AreaSmokingDTO>> response = call.execute();
+                Log.d("ckh_report", response.toString());
+                return response.body();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<AreaSmokingDTO> result) {
+            if (result == null) {
+                Toast.makeText(MainActivity.this, "흡연 쿼리 failed", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "흡연 쿼리 success", Toast.LENGTH_SHORT).show();
+
+            }
+            Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.custom_pin_smoking);
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 96, 96, false);
+            if(result!=null) {
+                for (int i = 0; i < result.size(); i++) {
+                    AreaSmokingDTO area = result.get(i);
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(area.getLatitude()), Double.parseDouble(area.getLogitude())))
+                            .title(area.getDetail_address())
+                            .snippet("분류 :" + area.getClassification())
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+
+                    if (smoking_clicked && checkDuplicateArea(markerSmokingList, markerOptions))
+                        markerSmokingList.add(mGoogleMap.addMarker(markerOptions));
+                }
+            }
+        }
+    }
+    boolean checkDuplicateArea(ArrayList<Marker> markerList, MarkerOptions markerOptions){
+        if(markerList==null) return true;
+        for (int i=0;i<markerList.size();i++){
+            if(markerList.get(i).getTitle().equals(markerOptions.getTitle())) return false;
+        }
+        return true;
     }
 }
