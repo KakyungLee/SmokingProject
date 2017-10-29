@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity
     String currentMapCenterLongitude = "";
     ArrayList<Marker> markerNonSmokingList = null;
     ArrayList<Marker> markerSmokingList = null;
+    Marker userPinned = null;
     /////////////////////////////////////
     private ImageButton fab_no_smoking; // 금연 구역 필터 버튼
     private ImageButton fab_smoking; //흡연 구역 필터 버튼
@@ -469,7 +470,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (newLatlng != null) selectedLogin = 1;
         //set pin Login
-        mGoogleMap.clear();
+        if(userPinned!=null) userPinned.remove();
         switch (selectedLogin) {
             case LOCATION_FLAG:
                 infoLocation.setSelectedLocationLatitude(newLocation.getLatitude());
@@ -477,20 +478,20 @@ public class MainActivity extends AppCompatActivity
                 LatLng target = new LatLng(infoLocation.getSelectedLocationLatitude(), infoLocation.getSelectedLocationLongitude());
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
                 markerOptions.position(target);
-                mGoogleMap.addMarker(markerOptions);
+                userPinned = mGoogleMap.addMarker(markerOptions);
                 break;
             case LATLNG_FLAG:
                 infoLocation.setSelectedLocationLatitude(newLatlng.latitude);
                 infoLocation.setSelectedLocationLongitude(newLatlng.longitude);
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(newLatlng));
                 markerOptions.position(newLatlng);
-                mGoogleMap.addMarker(markerOptions);
+                userPinned = mGoogleMap.addMarker(markerOptions);
                 break;
             default:
                 break;
         }
-        DecimalFormat formLat = new DecimalFormat("##.######");
-        DecimalFormat formLng = new DecimalFormat("###.######");
+        DecimalFormat formLat = new DecimalFormat("##.########");
+        DecimalFormat formLng = new DecimalFormat("###.########");
         refinedLatLng = formLat.format(infoLocation.getSelectedLocationLatitude()) + "," + formLng.format(infoLocation.getSelectedLocationLongitude());
         Toast.makeText(
                 MainActivity.this,
@@ -541,7 +542,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d("ckhlogging", result.getStatus());
                 currentAddress = result.getResults().get(0).getFormattedAddress();
                 tv_address.setText(currentAddress);
-                Toast.makeText(MainActivity.this, currentAddress, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, currentAddress, Toast.LENGTH_SHORT).show();
             }
         }
     }
