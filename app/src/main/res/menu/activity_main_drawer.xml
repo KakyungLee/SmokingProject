@@ -4,21 +4,21 @@
 
     <item
         android:id="@+id/nav_notice"
-        android:icon="@drawable/notification"
+        android:icon="@drawable/notice"
         android:title="공지사항" />
 
     <item
         android:id="@+id/nav_law"
-        android:icon="@drawable/legislation_info"
+        android:icon="@drawable/law"
         android:title="법률정보" />
     <item
         android:id="@+id/nav_question"
-        android:icon="@drawable/question_round"
+        android:icon="@drawable/question"
         android:title="정부문의" />
 
     <item
         android:id="@+id/nav_info"
-        android:icon="@drawable/settings"
+        android:icon="@drawable/setting"
         android:title="앱정보"/>
 
 </menu>

@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="mainColor">#9fd3e0</color>
+    <color name="mainColor">#a0d3e0</color>
     <color name="lightMain">#c1f3ff</color>
     <color name="darkMain">#81acb7</color>
     <color name="black">#000000</color>
@@ -11,4 +11,5 @@
     <color name="app_title">#333333</color>
     <color name="textColor">#2e75b6</color>
     <color name="tempImage">#ecebeb</color>
+    <color name="situationBar">#282c36</color>
 </resources>
