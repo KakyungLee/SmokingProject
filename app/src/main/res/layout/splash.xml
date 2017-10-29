@@ -7,11 +7,10 @@
 
     <ImageView
         android:id="@+id/splash_image"
-        android:layout_width="350dp"
-        android:layout_height="250dp"
-        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/main_icon"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginLeft="10dp"/>
 
 </LinearLayout>
