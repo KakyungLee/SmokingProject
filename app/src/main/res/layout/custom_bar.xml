@@ -8,7 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/temp2"
         android:textStyle="bold"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        android:background="@color/temp3"
+        android:layout_margin="-100dp"/>
 </LinearLayout>

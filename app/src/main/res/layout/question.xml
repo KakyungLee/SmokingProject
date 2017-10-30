@@ -114,7 +114,7 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/custom_bar_and_button"
+        android:background="@color/white"
         android:layout_marginTop="5dp">
 
         <ImageButton
@@ -123,9 +123,9 @@
             android:layout_height="30dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_gallery"
-            android:background="@drawable/custom_bar_and_button"
+            android:background="@color/white"
             android:layout_marginLeft="10dp"
-            android:tint="@color/white"
+            android:tint="@color/temp4"
             android:layout_marginTop="5dp"/>
 
         <ImageButton
@@ -135,9 +135,9 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_camera"
             android:layout_toRightOf="@+id/open_gallery_question"
-            android:background="@drawable/custom_bar_and_button"
+            android:background="@color/white"
             android:layout_marginLeft="10dp"
-            android:tint="@color/white"
+            android:tint="@color/temp4"
             android:layout_marginTop="5dp"/>
 
         <Button
@@ -145,9 +145,9 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            android:text="submit"
-            android:textColor="@color/white"
-            android:background="@drawable/custom_bar_and_button"
+            android:text="제출"
+            android:textColor="@color/temp2"
+            android:background="@color/white"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"/>
 

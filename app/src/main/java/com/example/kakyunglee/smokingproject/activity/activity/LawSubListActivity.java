@@ -23,7 +23,7 @@ public class LawSubListActivity extends AppCompatActivity {
             "대규모 점포","관광숙박업소","체육시설","사회복지시설","목욕장",
             "게임방/ PC방","만화방","음식점","고속도로 휴게시설","공동주택",
             "산림인접지역","자연공원","숭례문","버스 및 택시","기차",
-            "공항","항공기","문화재","그외"};
+            "공항","항공기","문화재","그 외"};
     private  String title;
     private int where;
 

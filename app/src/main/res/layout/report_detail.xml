@@ -23,10 +23,15 @@
         android:text="서울특별시 광진구 군자동 209"
         android:layout_above="@+id/report"
         android:layout_margin="-10dp"
-        android:textColor="@color/white"
-        android:background="@color/mainColor"
-        android:gravity="center_vertical"
+        android:textColor="@color/temp6"
+        android:gravity="center"
         android:paddingLeft="10dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerInParent="true"
+        android:background="@color/tempImage"/>
 
     <TextView
         android:layout_marginLeft="10dp"
@@ -91,7 +96,7 @@
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:background="@drawable/custom_bar_and_button"
+        android:background="@color/white"
         android:layout_marginTop="5dp">
 
         <ImageButton
@@ -100,9 +105,9 @@
             android:layout_height="30dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_gallery"
-            android:background="@drawable/custom_bar_and_button"
+            android:background="@color/white"
             android:layout_marginLeft="10dp"
-            android:tint="@color/white"
+            android:tint="@color/temp4"
             android:layout_marginTop="5dp"/>
 
         <ImageButton
@@ -112,18 +117,18 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_camera"
             android:layout_toRightOf="@+id/open_gallery"
-            android:background="@drawable/custom_bar_and_button"
+            android:background="@color/white"
             android:layout_marginLeft="10dp"
-            android:tint="@color/white"
+            android:tint="@color/temp4"
             android:layout_marginTop="5dp"/>
         <Button
             android:id="@+id/submit_report"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="submit"
+            android:text="제출"
             android:layout_alignParentRight="true"
-            android:textColor="@color/white"
-            android:background="@drawable/custom_bar_and_button"
+            android:textColor="@color/temp2"
+            android:background="@color/white"
             android:layout_marginTop="5dp"/>
     </RelativeLayout>
 

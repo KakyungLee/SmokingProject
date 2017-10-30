@@ -1,59 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/app_icon"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:src="@drawable/main_icon_color"
-        android:layout_marginTop="100dp"/>
-
-    <TextView
-        android:id="@+id/app_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="여기선 피지마"
-        android:textSize="20dp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/darkMain"
-        android:layout_below="@+id/app_icon"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여기선 피지마"
+            android:textColor="@color/temp2"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="version 1.0"
+            android:textColor="@color/temp3"
+            android:gravity="right"/>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/app_developer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_info_developer"
-        android:textSize="20dp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/darkMain"
-        android:layout_below="@+id/app_name"/>
+        android:text="어플리케이션을 통하여 접수된  불편과 신고는  서울시 각 구 구청 온라인 민원신고로 보내집니다.\n등록된 민원에 대해서는 수정이 불가능하며 해당 신고 위치에 대한 책임은 신고자에게 있습니다.\n\n담배와 관련한 구체적인 법적  조치와 규정은 법률 정보 페이지를 통해 확인하실 수 있습니다."
+        android:textColor="@color/temp3"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+
 
     <TextView
-        android:id="@+id/app_api"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_info_use_API"
+        android:text="사용 API"
+        android:textColor="@color/temp2"
         android:textSize="20dp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/darkMain"
-        android:layout_below="@+id/app_developer"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
     <TextView
-        android:id="@+id/app_version"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_info_version"
-        android:textSize="20dp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/darkMain"
-        android:layout_below="@+id/app_api"/>
+        android:text="-서울시 금연장소 데이터\n-서울시 흡연장소 데이터\n-흡연관련 법률정보"
+        android:textColor="@color/temp3"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="앱 사용 방법"
+        android:textColor="@color/temp2"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-서울시 금연장소 데이터\n-서울시 흡연장소 데이터\n-흡연관련 법률정보"
+        android:textColor="@color/temp3"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+</LinearLayout>

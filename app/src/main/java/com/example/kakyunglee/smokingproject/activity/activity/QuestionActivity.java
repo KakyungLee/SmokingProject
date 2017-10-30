@@ -241,7 +241,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         String newImage = formattedDate+"."+ mimeType.substring(mimeType.indexOf("/") + 1, mimeType.length());
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", newImage, requestFile);
-        final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),body);
+        final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getEmail(),inputData.getContents(),body);
         new postQuestionCall().execute(call);
 
     }
@@ -249,7 +249,7 @@ public class QuestionActivity extends AppCompatActivity {
     private void postTotalData(QuestionDTO inputData){
 
         PostQuestion postReportService = ServiceRetrofit.getInstance().getRetrofit().create(PostQuestion.class);
-        final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getContents(),inputData.getEmail(),null);
+        final Call<QuestionResponseDTO> call = postReportService.postQuestion(inputData.getTitle(),inputData.getReport_category_id(),inputData.getEmail(),inputData.getContents(),null);
         new postQuestionCall().execute(call);
 
     }
