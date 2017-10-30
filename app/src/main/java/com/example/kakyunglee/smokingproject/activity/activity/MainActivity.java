@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity
         if (!smoking_clicked) {
 
             Toast.makeText(getApplicationContext(), "흡연 구역 필터 on", Toast.LENGTH_LONG).show();
-            fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button);
+            fab_smoking.setBackgroundResource(R.drawable.filter_pressed_button_red);
             if (markerSmokingList != null)
                 for (int i = 0; i < markerSmokingList.size(); i++)
                     markerSmokingList.get(i).setVisible(true);
@@ -679,7 +679,7 @@ public class MainActivity extends AppCompatActivity
 
             }
             Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.custom_pin_non_smoking);
+                    R.drawable.custom_pin_smoking);
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 96, 96, false);
 
             if (result != null) {
@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity
                     AreaNoneSmokingDTO area = result.get(i);
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(area.getLatitude()), Double.parseDouble(area.getLongitude())))
-                            .title(area.getName())
+                            .title("금연구역 ["+area.getName()+"]")
                             .snippet("범위 :" + area.getRange())
                             .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
 
@@ -723,14 +723,14 @@ public class MainActivity extends AppCompatActivity
 
             }
             Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.custom_pin_smoking);
+                    R.drawable.custom_pin_non_smoking);
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 96, 96, false);
             if (result != null) {
                 for (int i = 0; i < result.size(); i++) {
                     AreaSmokingDTO area = result.get(i);
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(area.getLatitude()), Double.parseDouble(area.getLogitude())))
-                            .title(area.getDetail_address())
+                            .title("흡연구역 ["+area.getDetail_address()+"]")
                             .snippet("분류 :" + area.getClassification())
                             .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
 

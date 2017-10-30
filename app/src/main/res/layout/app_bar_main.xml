@@ -58,8 +58,8 @@
         android:layout_above="@+id/smoking_area"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:src="@drawable/no_smoking_black128"
+        android:padding="8dp"
+        android:src="@drawable/no_smoking_white128"
         android:background="@drawable/filter_pressed_button"/>
 
     <ImageButton
@@ -71,9 +71,9 @@
         android:layout_above="@+id/address"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:src="@drawable/smoking_balck128"
-        android:background="@drawable/filter_pressed_button"/>
+        android:padding="8dp"
+        android:src="@drawable/smoking_white128"
+        android:background="@drawable/filter_pressed_button_red"/>
 
     <TextView
         android:id="@+id/address"
