@@ -26,6 +26,7 @@
                     android:layout_height="40dp"
                     android:hint="@string/mainactivity_et_search_loc"
                     android:textColor="@color/darkMain"
+                    android:imeOptions="actionSearch"
                     android:inputType="text"/>
 
 

@@ -20,9 +20,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -151,6 +153,22 @@ public class MainActivity extends AppCompatActivity
                 new NetWorkGeoAddressInfo().execute(callGeoCodeResult);
             }
         });
+        et_userAddressInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId){
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        String userSearchAddress = et_userAddressInput.getText().toString();
+                        AddressInfo getLatLng = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
+                        Call<GeoCodeResult> callGeoCodeResult = getLatLng.geoResult(userSearchAddress, "ko", "AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
+                        new NetWorkGeoAddressInfo().execute(callGeoCodeResult);
+                        break;
+                    default:
+                        return false;
+                }
+                return false;
+            }
+        });
         // 금연구역 필터 버튼
         fab_no_smoking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View v) {
                         dialog.cancel();
                         PostReport postReport = ServiceRetrofit.getInstance().getRetrofit().create(PostReport.class);
-                        Toast.makeText(MainActivity.this, "" + fixedLat + " / " + fixedLng, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "" + fixedLat + " / " + fixedLng, Toast.LENGTH_SHORT).show();
                         Call<ReportResultDTO> call = postReport.postSimpleReport(fixedLat, fixedLng);
                         new NetworkReport().execute(call);
                     }
@@ -493,11 +511,11 @@ public class MainActivity extends AppCompatActivity
         DecimalFormat formLat = new DecimalFormat("##.########");
         DecimalFormat formLng = new DecimalFormat("###.########");
         refinedLatLng = formLat.format(infoLocation.getSelectedLocationLatitude()) + "," + formLng.format(infoLocation.getSelectedLocationLongitude());
-        Toast.makeText(
+        /*Toast.makeText(
                 MainActivity.this,
                 refinedLatLng,
                 Toast.LENGTH_SHORT
-        ).show();
+        ).show();*/
         AddressInfo getAddress = GeoRetrofit.getInstance().getRetrofit().create(AddressInfo.class);
         Call<GeoCodeResult> callReverseGeoCodeResult = getAddress.reverseGeoResult(refinedLatLng, "ko", "AIzaSyA8lmYR7nzLGTmbPd1KSl4R-B__-bNOr9k");
         new NetWorkGeoInfo().execute(callReverseGeoCodeResult);
