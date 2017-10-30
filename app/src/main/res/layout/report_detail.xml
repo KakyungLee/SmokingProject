@@ -23,7 +23,7 @@
         android:text="서울특별시 광진구 군자동 209"
         android:layout_above="@+id/report"
         android:layout_margin="-10dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:background="@color/mainColor"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"/>
@@ -60,7 +60,8 @@
         android:src="@drawable/ic_menu_gallery"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:background="@color/white"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -90,7 +91,7 @@
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:background="@color/mainColor"
+        android:background="@drawable/custom_bar_and_button"
         android:layout_marginTop="5dp">
 
         <ImageButton
@@ -99,7 +100,7 @@
             android:layout_height="30dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_gallery"
-            android:background="@color/mainColor"
+            android:background="@drawable/custom_bar_and_button"
             android:layout_marginLeft="10dp"
             android:tint="@color/white"
             android:layout_marginTop="5dp"/>
@@ -111,7 +112,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_menu_camera"
             android:layout_toRightOf="@+id/open_gallery"
-            android:background="@color/mainColor"
+            android:background="@drawable/custom_bar_and_button"
             android:layout_marginLeft="10dp"
             android:tint="@color/white"
             android:layout_marginTop="5dp"/>
@@ -122,7 +123,7 @@
             android:text="submit"
             android:layout_alignParentRight="true"
             android:textColor="@color/white"
-            android:background="@color/mainColor"
+            android:background="@drawable/custom_bar_and_button"
             android:layout_marginTop="5dp"/>
     </RelativeLayout>
 
