@@ -99,7 +99,7 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGallery();
-                Toast.makeText(getApplicationContext(), "get image from gallery", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "get image from gallery", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -108,7 +108,7 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openCamera();
-                Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
             }
         });
 
