@@ -320,8 +320,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_question) { // 정부 문의로 이동
             Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
-            startActivity(intent);
-            finish();
+            startActivityForResult(intent,0);
 
         } else if (id == R.id.nav_info) { // 앱 정보로 이동
             Intent intent = new Intent(MainActivity.this, AppInfoActivity.class);
@@ -335,9 +334,20 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(MainActivity.this, ReportDetailActivity.class);
         intent.putExtra("report_id", reportId);
         intent.putExtra("address", address);
-        startActivity(intent);
-        finish();
+        startActivityForResult(intent,0);
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        switch(resultCode){
+            case 0:
+                break;
+            case 1:
+                break;
+        }
+
+    }
+
 
     protected void onStart() {
         mGoogleApiClient.connect();

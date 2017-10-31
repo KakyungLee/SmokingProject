@@ -135,7 +135,7 @@ public class QuestionActivity extends AppCompatActivity {
                     return;
                 }
                 Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+[@][a-zA-Z0-9]+[\\.][a-zA-Z0-9]+$");
-                Matcher matcher = pattern.matcher(questionEmail.getText().toString());
+                Matcher matcher = pattern.matcher(questionEmail.getText().toString().trim());
                 if(!matcher.matches()){
                     Toast.makeText(getApplicationContext(),"이메일을 정확히 작성해 주세요",Toast.LENGTH_SHORT).show();
                     return;
@@ -155,7 +155,7 @@ public class QuestionActivity extends AppCompatActivity {
                 // main 화면으로 돌아가기
                 Intent intent =  new Intent(QuestionActivity.this,MainActivity.class);
                 Toast.makeText(getApplication(),"문의를 완료했습니다",Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                setResult(0);
                 finish();
 
 

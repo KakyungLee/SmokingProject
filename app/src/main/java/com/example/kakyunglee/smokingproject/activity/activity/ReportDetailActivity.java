@@ -138,7 +138,7 @@ public class ReportDetailActivity extends AppCompatActivity{
                     return;
                 }
                 Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+[@][a-zA-Z0-9]+[\\.][a-zA-Z0-9]+$");
-                Matcher matcher = pattern.matcher(email.getText().toString());
+                Matcher matcher = pattern.matcher(email.getText().toString().trim());
                 if(!matcher.matches()){
                     Toast.makeText(getApplicationContext(),"이메일을 정확히 작성해 주세요",Toast.LENGTH_SHORT).show();
                     return;
@@ -162,7 +162,7 @@ public class ReportDetailActivity extends AppCompatActivity{
                 // main 화면으로 돌아가기
                 Intent intent =  new Intent(ReportDetailActivity.this,MainActivity.class);
                 Toast.makeText(getApplication(),"신고를 완료했습니다",Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                setResult(0);
                 finish();
 
             }
