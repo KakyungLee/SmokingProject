@@ -268,7 +268,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(QuestionResponseDTO result) {
-            Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
         }
 
     }

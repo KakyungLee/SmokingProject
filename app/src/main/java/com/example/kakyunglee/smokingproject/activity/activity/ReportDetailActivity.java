@@ -106,7 +106,7 @@ public class ReportDetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 openGallery();
-                Toast.makeText(getApplicationContext(), "get image from gallery", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "get image from gallery", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -115,7 +115,7 @@ public class ReportDetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 openCamera();
-                Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "get image from camera", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -270,7 +270,7 @@ public class ReportDetailActivity extends AppCompatActivity{
         }
         @Override
         protected void onPostExecute(ReportDetailResultDTO result) {
-            Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
         }
 
     }
