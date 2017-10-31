@@ -321,6 +321,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_question) { // 정부 문의로 이동
             Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_info) { // 앱 정보로 이동
             Intent intent = new Intent(MainActivity.this, AppInfoActivity.class);
@@ -335,6 +336,7 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("report_id", reportId);
         intent.putExtra("address", address);
         startActivity(intent);
+        finish();
     }
 
     protected void onStart() {
